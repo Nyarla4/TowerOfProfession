@@ -168,10 +168,12 @@ namespace status
                 stat.Multiplier -= value;
         }
 
-        public void AddPermanent(StatType type, float value)
+        public void AddPermanent(StatType type, float value, bool isPercent)
         {
             if (_statMap.TryGetValue(type, out var stat))
-                stat.AddPermanentBonus(value);
+            {
+                stat.AddPermanentBonus(isPercent ? stat.Total * value : value);
+            }
         }
     }
 }
