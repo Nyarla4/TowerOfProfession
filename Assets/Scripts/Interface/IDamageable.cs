@@ -1,8 +1,12 @@
-using UnityEngine;
-
 public interface IDamageable
 {
-    public void TakeDamage(Entity attacker, float rawDamage);
+    void TakeDamage(Entity attacker, float rawDamage);
 
-    public void Die();
+    void Die();
+}
+
+public interface IHealable
+{
+    void TakeHeal(float amount);
+    bool IsFullHealth { get; }
 }
