@@ -4,8 +4,21 @@ using UnityEngine.InputSystem;
 
 public class PlayerInput : MonoBehaviour
 {
-    /// <summary> WASD, 방향키 </summary>
-    public Vector2 MoveInputMap { get; private set; }
+    [SerializeField] private JoyStick _joyStick;
+    /// <summary> 이동 </summary>
+    private Vector2 _moveInputMap;
+    public Vector2 MoveInputMap {
+        get
+        {
+            return _moveInputMap;
+        }
+        private set
+        {
+            //JoystickMove에서 반환 받은 horizontal, vetical값을 사용하여 캐릭터를 이동시킵니다.
+            _moveInputMap.x = _joyStick.Horizontal;
+            _moveInputMap.y = _joyStick.Vertical;
+        }
+    }
         
     private bool isPause;
     /// <summary> ESC </summary>
@@ -38,19 +51,6 @@ public class PlayerInput : MonoBehaviour
     }
     /// <summary> Interact 이벤트 </summary>
     public Action<bool> OnInteract;
-
-    public void OnMove(InputAction.CallbackContext context)
-    {
-        if (Time.timeScale == 0)
-        {
-            MoveInputMap = Vector2.zero;
-            return;
-        }
-
-        Vector2 value = context.ReadValue<Vector2>();
-
-        MoveInputMap = value;
-    }
 
     public void Pause(InputAction.CallbackContext context)
     {
