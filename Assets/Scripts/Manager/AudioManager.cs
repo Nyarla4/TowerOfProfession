@@ -24,6 +24,7 @@ public class AudioManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -65,9 +66,9 @@ public class AudioManager : MonoBehaviour
 
     public void UpdateSlider()
     {
-        _masterSlider.value = _masterVolume;
-        _bgmSlider.value = _bgmVolume;
-        _sfxSlider.value = _sfxVolume;
+        if (_masterSlider != null) _masterSlider.value = _masterVolume;
+        if (_bgmSlider != null) _bgmSlider.value = _bgmVolume;
+        if (_sfxSlider != null) _sfxSlider.value = _sfxVolume;
     }
 
     public float LinearToDecibel(float linear01)

@@ -46,8 +46,8 @@ public abstract class Entity : MonoBehaviour, IDamageable, IMovable, IHealable
             return;
         }
 
-        if (_isDead)
-            return;
+        if (_isDead) return;
+        if (Stat.IsInvincible) return; // ← 추가
 
         float damage = Mathf.Max(0, rawDamage - Stat.FinalDef);
 
@@ -60,7 +60,7 @@ public abstract class Entity : MonoBehaviour, IDamageable, IMovable, IHealable
         }
     }
 
-    public void Die()
+    public virtual void Die()
     {
         if (_isDead)
             return;
@@ -84,5 +84,10 @@ public abstract class Entity : MonoBehaviour, IDamageable, IMovable, IHealable
     public virtual void Move(float dirX, float dirY)
     {
 
+    }
+
+    protected void InvokeOnAttacked(Entity defender)
+    {
+        OnAttacked?.Invoke(defender);
     }
 }

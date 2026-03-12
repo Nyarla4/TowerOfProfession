@@ -6,25 +6,21 @@ public class PlayerInput : MonoBehaviour
 {
     [SerializeField] private JoyStick _joyStick;
     /// <summary> 이동 </summary>
-    private Vector2 _moveInputMap;
-    public Vector2 MoveInputMap {
+    public Vector2 MoveInputMap
+    {
         get
         {
-            return _moveInputMap;
-        }
-        private set
-        {
-            //JoystickMove에서 반환 받은 horizontal, vetical값을 사용하여 캐릭터를 이동시킵니다.
-            _moveInputMap.x = _joyStick.Horizontal;
-            _moveInputMap.y = _joyStick.Vertical;
+            return new Vector2(_joyStick.Horizontal, _joyStick.Vertical);
         }
     }
-        
+
     private bool isPause;
     /// <summary> ESC </summary>
-    public bool IsPause {
+    public bool IsPause
+    {
         get { return isPause; }
-        private set {
+        private set
+        {
             if (value != isPause)
             {
                 OnPause?.Invoke(value);
@@ -34,7 +30,7 @@ public class PlayerInput : MonoBehaviour
     }
     /// <summary> ESC 이벤트 </summary>
     public Action<bool> OnPause;
-        
+
     private bool isInteract;
     /// <summary> Shift </summary>
     public bool IsInteract

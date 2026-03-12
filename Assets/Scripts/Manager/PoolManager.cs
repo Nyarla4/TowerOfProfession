@@ -141,7 +141,16 @@ public class PoolManager : MonoBehaviour
     {
         if (Instance != null)
         {
-            return Instance._instantiated.FindAll(f => f.activeInHierarchy && f.GetComponent<IPooledObject>().OriginPrefab == prefab);
+            return Instance._instantiated.FindAll(f =>
+            {
+                if (!f.activeInHierarchy) return false;
+                if (!f.TryGetComponent<IPooledObject>(out var pooled))
+                {
+                    Debug.LogError($"PoolManager_GetInstantiatedObject: {f.name}에 IPooledObject 인터페이스가 없습니다");
+                    return false;
+                }
+                return pooled.OriginPrefab == prefab;
+            });
         }
         return null;
     }
