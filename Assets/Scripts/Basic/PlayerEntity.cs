@@ -361,18 +361,8 @@ public class PlayerEntity : Entity
         Stat.ForceCrit = false;
         ResetFlags(); // 공격 예약 플래그 + _attackCount 초기화
 
-        // 전직 보너스 및 PERMANENT 패시브 재적용
-        if (CurrentJob != null)
-        {
-            Stat.AddModifier(StatType.MaxHp, CurrentJob.BonusMaxHp);
-            Stat.AddModifier(StatType.Attack, CurrentJob.BonusAtk);
-            Stat.AddModifier(StatType.Defense, CurrentJob.BonusDef);
-            Stat.AddModifier(StatType.MoveSpeed, CurrentJob.BonusMoveSpeed);
-            Stat.AddModifier(StatType.Regen, CurrentJob.BonusRegen);
-            Stat.AddModifier(StatType.AttackRange, CurrentJob.BonusRange);
-            SkillManager.Instance?.ApplyPermanentPassives(this, CurrentJob);
-        }
-
+        // 직업 보너스 / PERMANENT 패시브는 ChangeJob 시점에 이미 Additional에 적재됨
+        // Respawn은 Stat을 new로 재생성하지 않으므로 재적용 불필요 — 여기서 AddModifier 하면 리스폰마다 2중 누적됨
         Stat.SetHealth(Stat.FinalMaxHealth);
     }
 }

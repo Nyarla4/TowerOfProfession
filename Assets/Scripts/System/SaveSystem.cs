@@ -89,22 +89,10 @@ public class PlayData
     public int level = 1;
     public float exp = 0f;
     public string jobId = "APPRENTICE";
-
-    // 스탯
-    public float hp;
-    public float maxHp;
-    public float atk;
-    public float def;
-    public float moveSpeed;
     public int statPoints = 0;
 
-    // 치명타
-    public float criticalPerc = 0f;
-    public float criticalMultiplier = 2.0f;
-    public int criticalEvery = 0;
-
-    // 직업별 누적 스택
-    public int holyStack = 0;  // 팔라딘 신의 가호
+    // 전투
+    public float hp;
 
     // 위치 (마지막 스폰 포인트)
     public string lastSpawnPointName = "";

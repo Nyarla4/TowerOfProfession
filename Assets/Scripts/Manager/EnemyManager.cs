@@ -22,6 +22,7 @@ public class EnemyManager : MonoBehaviour
         public Transform[] SpawnPoints;
         public int MaxCount = 5;
         public float RespawnDelay = 10f;
+        public float ExpReward = 20f; // 적 처치 시 지급 경험치
     }
 
     [SerializeField] private SpawnGroup[] _spawnGroups;
@@ -128,11 +129,13 @@ public class EnemyManager : MonoBehaviour
         _enemies.Remove(enemy);
         _forcedChaseEnemies.Remove(enemy);
 
+        // 그룹 탐색 1회 후 리스폰/경험치에 공용 사용
+        var group = FindGroupByPrefab(enemy);
+
         // 목록 정리 완료 후 ON_KILL 트리거 (순서 보장)
-        NotifyEnemyDied(enemy);
+        NotifyEnemyDied(enemy, group);
 
         // 리스폰 처리
-        var group = FindGroupByPrefab(enemy);
         if (group != null)
             StartCoroutine(RespawnAfterDelay(group, enemy.transform.position));
 
@@ -169,9 +172,14 @@ public class EnemyManager : MonoBehaviour
     /// <summary>
     /// 적 사망 시 호출 — PlayerEntity에 ON_KILL 이벤트 전달
     /// </summary>
-    public void NotifyEnemyDied(Enemy deadEnemy)
+    public void NotifyEnemyDied(Enemy deadEnemy, SpawnGroup group = null)
     {
         if (_player == null) return;
+
+        // 경험치 지급
+        if (group != null)
+            PlayerManager.Instance?.GainExp(group.ExpReward);
+
         SkillManager.Instance?.TriggerEventPassive(
             _player, _player.CurrentJob, EventType.ON_KILL, deadEnemy);
     }

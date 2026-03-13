@@ -72,6 +72,8 @@ public class SkillManager : MonoBehaviour
             case "rog_p1": // 암살자의 발걸음
                 stat.AddModifier(StatType.MoveSpeed, 1.2f);
                 stat.AddModifier(StatType.Defense, -5f); break;
+            case "rog_p3": // 급소 (criticalEvery=3)
+                stat.CriticalEvery = 3; break;
 
             // ── 버서커 ──
             case "ber_p1": // 피의 각성
@@ -609,6 +611,7 @@ public class SkillManager : MonoBehaviour
             case "rog_p1":
                 stat.RemoveModifier(StatType.MoveSpeed, 1.2f);
                 stat.RemoveModifier(StatType.Defense, -5f); break;
+            case "rog_p3": stat.CriticalEvery = 0; break;
             case "ber_p1": stat.RemoveModifier(StatType.Attack, 10f); break;
             case "pal_p1":
                 stat.RemoveModifier(StatType.MaxHp, 200f);
