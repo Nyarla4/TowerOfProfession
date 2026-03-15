@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 694e5227e2f031f4da81a6e9b6ba89bc, type: 3}
-  m_Name: PlayerStat
+  m_Name: Enemy_Goblin
   m_EditorClassIdentifier: 
-  EntityID: player
-  DisplayName: "\uD50C\uB808\uC774\uC5B4"
-  MaxHealth: 300
-  MoveSpeed: 5
-  Regen: 2
-  Attack: 20
+  EntityID: goblin
+  DisplayName: "\uACE0\uBE14\uB9B0"
+  MaxHealth: 200
+  MoveSpeed: 2.5
+  Regen: 0
+  Attack: 18
   Defense: 5
-  AttackSpeed: 1
-  AttackRange: 1.5
+  AttackSpeed: 1.2
+  AttackRange: 60
   CriticalChance: 0.05

@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 694e5227e2f031f4da81a6e9b6ba89bc, type: 3}
-  m_Name: PlayerStat
+  m_Name: Enemy_Orc
   m_EditorClassIdentifier: 
-  EntityID: player
-  DisplayName: "\uD50C\uB808\uC774\uC5B4"
-  MaxHealth: 300
-  MoveSpeed: 5
+  EntityID: orc
+  DisplayName: "\uC624\uD06C"
+  MaxHealth: 500
+  MoveSpeed: 1.8
   Regen: 2
-  Attack: 20
-  Defense: 5
-  AttackSpeed: 1
-  AttackRange: 1.5
-  CriticalChance: 0.05
+  Attack: 35
+  Defense: 15
+  AttackSpeed: 0.7
+  AttackRange: 70
+  CriticalChance: 0.1

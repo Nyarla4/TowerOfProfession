@@ -94,12 +94,16 @@ public class EnemyManager : MonoBehaviour
 
     private IEnumerator SpawnGroupCoroutine(SpawnGroup group)
     {
-        int spawned = 0;
-        foreach (var point in group.SpawnPoints)
+        if (group.SpawnPoints == null || group.SpawnPoints.Length == 0)
         {
-            if (spawned >= group.MaxCount) break;
+            Debug.LogWarning($"EnemyManager: {group.GroupID} SpawnPoints 미설정");
+            yield break;
+        }
+
+        for (int i = 0; i < group.MaxCount; i++)
+        {
+            var point = group.SpawnPoints[Random.Range(0, group.SpawnPoints.Length)];
             SpawnEnemy(group.EnemyPrefab, point.position, group.GroupID);
-            spawned++;
             yield return null;
         }
     }
@@ -137,7 +141,10 @@ public class EnemyManager : MonoBehaviour
 
         // 리스폰 처리
         if (group != null)
-            StartCoroutine(RespawnAfterDelay(group, enemy.transform.position));
+        {
+            var point = group.SpawnPoints[Random.Range(0, group.SpawnPoints.Length)];
+            StartCoroutine(RespawnAfterDelay(group, point.position));
+        }
 
         // 오브젝트 지연 제거
         StartCoroutine(DespawnAfterDelay(enemy.gameObject, 2f));

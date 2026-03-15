@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95a6d163f5777fc4c8b83a47d8a30998, type: 3}
+  m_Name: 4-2 VIPER
+  m_EditorClassIdentifier: 
+  JobID: VIPER
+  DisplayName: "\uB3C5\uC0AC"
+  AttackType: 2
+  JobColor: {r: 0, g: 0, b: 0, a: 0}
+  BonusMaxHp: 0
+  BonusAtk: 15
+  BonusDef: 0
+  BonusMoveSpeed: 0.5
+  BonusRegen: 5
+  BonusRange: 100
+  Passives:
+  - SkillID: vip_p1
+    DisplayName: "\uB9F9\uB3C5"
+    Type: 0
+    EventType: 0
+  - SkillID: vip_p2
+    DisplayName: "\uB3C5 \uCE5C\uD654"
+    Type: 1
+    EventType: 0
+  - SkillID: vip_p3
+    DisplayName: "\uB3C5 \uC804\uC774"
+    Type: 2
+    EventType: 1
+  Actives:
+  - SkillID: vip_a1
+    DisplayName: "\uB3C5 \uC548\uAC1C"
+    Icon: {fileID: 0}
+    Cooldown: 12
+    Duration: 5
+    Radius: 120
+    DashDistance: 0
+    Multiplier: 0
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}
+  - SkillID: vip_a2
+    DisplayName: "\uB9C8\uBE44 \uB2E8\uAC80"
+    Icon: {fileID: 0}
+    Cooldown: 8
+    Duration: 0
+    Radius: 0
+    DashDistance: 0
+    Multiplier: 1
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}

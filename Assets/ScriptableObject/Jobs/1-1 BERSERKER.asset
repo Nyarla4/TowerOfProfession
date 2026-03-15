@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95a6d163f5777fc4c8b83a47d8a30998, type: 3}
+  m_Name: 1-1 BERSERKER
+  m_EditorClassIdentifier: 
+  JobID: BERSERKER
+  DisplayName: "\uBC84\uC11C\uCEE4"
+  AttackType: 1
+  JobColor: {r: 0, g: 0, b: 0, a: 0}
+  BonusMaxHp: 150
+  BonusAtk: 25
+  BonusDef: -10
+  BonusMoveSpeed: 0.5
+  BonusRegen: 0
+  BonusRange: 0
+  Passives:
+  - SkillID: ber_p1
+    DisplayName: "\uD53C\uC758 \uAC01\uC131"
+    Type: 0
+    EventType: 0
+  - SkillID: ber_p2
+    DisplayName: "\uAD11\uC804\uC0AC"
+    Type: 1
+    EventType: 0
+  - SkillID: ber_p3
+    DisplayName: "\uD559\uC0B4\uC790"
+    Type: 2
+    EventType: 1
+  Actives:
+  - SkillID: ber_a1
+    DisplayName: "\uD53C\uC758 \uB9F9\uC138"
+    Icon: {fileID: 0}
+    Cooldown: 15
+    Duration: 0
+    Radius: 200
+    DashDistance: 0
+    Multiplier: 0
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0.3
+    EffectPrefab: {fileID: 0}
+  - SkillID: ber_a2
+    DisplayName: "\uB3CC\uC9C4"
+    Icon: {fileID: 0}
+    Cooldown: 8
+    Duration: 0
+    Radius: 60
+    DashDistance: 250
+    Multiplier: 1.2
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}

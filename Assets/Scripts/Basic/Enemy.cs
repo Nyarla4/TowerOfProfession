@@ -58,6 +58,13 @@ public class Enemy : Entity
     public float HpPercent => Stat.FinalMaxHealth > 0
         ? Stat.CurrentHealth / Stat.FinalMaxHealth : 0f;
 
+    [SerializeField] private EntityStatDataSO _statData;
+
+    private void Awake()
+    {
+        Initialize(_statData);
+    }
+
     // ─────────────────────────────────────────────
     // 초기화
     // ─────────────────────────────────────────────
@@ -256,7 +263,7 @@ public class Enemy : Entity
         Move(dir);
     }
 
-    /// <summary> 블랙홀 끌어당기기 (blk_a1) </summary>
+    /// <summary> 블랙홀 끌어당기기 (mge_a1) </summary>
     public void PullToward(Vector3 destination, float speed)
     {
         if (!IsAlive) return;
@@ -369,5 +376,20 @@ public class Enemy : Entity
             StopCoroutine(_stunCoroutine);
             _stunCoroutine = null;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        // 감지 범위 — 노란색
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, _detectRange);
+
+        // 공격 범위 — 빨간색
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, _attackRange);
+
+        // 복귀 범위 — 파란색
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, _returnRange);
     }
 }

@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95a6d163f5777fc4c8b83a47d8a30998, type: 3}
+  m_Name: 1-2 PALADIN
+  m_EditorClassIdentifier: 
+  JobID: PALADIN
+  DisplayName: "\uD314\uB77C\uB518"
+  AttackType: 0
+  JobColor: {r: 0, g: 0, b: 0, a: 0}
+  BonusMaxHp: 200
+  BonusAtk: 5
+  BonusDef: 30
+  BonusMoveSpeed: -0.5
+  BonusRegen: 5
+  BonusRange: 0
+  Passives:
+  - SkillID: pal_p1
+    DisplayName: "\uC2E0\uC131\uD55C \uAC11\uC637"
+    Type: 0
+    EventType: 0
+  - SkillID: pal_p2
+    DisplayName: "\uC131\uC2A4\uB7EC\uC6B4 \uC624\uB77C"
+    Type: 1
+    EventType: 0
+  - SkillID: pal_p3
+    DisplayName: "\uC2E0\uC758 \uAC00\uD638"
+    Type: 2
+    EventType: 1
+  Actives:
+  - SkillID: pal_a1
+    DisplayName: "\uCCA0\uBCBD\uBC29\uC5B4"
+    Icon: {fileID: 0}
+    Cooldown: 12
+    Duration: 5
+    Radius: 0
+    DashDistance: 0
+    Multiplier: 0
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}
+  - SkillID: pal_a2
+    DisplayName: "\uB3C4\uBC1C"
+    Icon: {fileID: 0}
+    Cooldown: 15
+    Duration: 4
+    Radius: 200
+    DashDistance: 0
+    Multiplier: 0
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}

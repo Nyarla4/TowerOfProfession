@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95a6d163f5777fc4c8b83a47d8a30998, type: 3}
+  m_Name: 1 WARRIOR
+  m_EditorClassIdentifier: 
+  JobID: WARRIOR
+  DisplayName: "\uC804\uC0AC"
+  AttackType: 0
+  JobColor: {r: 0, g: 0, b: 0, a: 0}
+  BonusMaxHp: 100
+  BonusAtk: 10
+  BonusDef: 15
+  BonusMoveSpeed: 0
+  BonusRegen: 0
+  BonusRange: 0
+  Passives:
+  - SkillID: war_p1
+    DisplayName: "\uCCA0\uAC11"
+    Type: 0
+    EventType: 0
+  - SkillID: war_p2
+    DisplayName: "\uBD84\uB178"
+    Type: 1
+    EventType: 0
+  - SkillID: war_p3
+    DisplayName: "\uC804\uC7A5 \uCE58\uC720"
+    Type: 2
+    EventType: 1
+  Actives:
+  - SkillID: war_a1
+    DisplayName: "\uC6A9\uAE30"
+    Icon: {fileID: 0}
+    Cooldown: 15
+    Duration: 5
+    Radius: 0
+    DashDistance: 0
+    Multiplier: 0
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}
+  - SkillID: war_a2
+    DisplayName: "\uBC29\uC5B4\uD0DC\uC138"
+    Icon: {fileID: 0}
+    Cooldown: 12
+    Duration: 4
+    Radius: 0
+    DashDistance: 0
+    Multiplier: 0
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}

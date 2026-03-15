@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95a6d163f5777fc4c8b83a47d8a30998, type: 3}
+  m_Name: 4-1 ASSASSIN
+  m_EditorClassIdentifier: 
+  JobID: ASSASSIN
+  DisplayName: "\uC5B4\uC314\uC2E0"
+  AttackType: 0
+  JobColor: {r: 0, g: 0, b: 0, a: 0}
+  BonusMaxHp: 0
+  BonusAtk: 35
+  BonusDef: -10
+  BonusMoveSpeed: 1.5
+  BonusRegen: 0
+  BonusRange: 0
+  Passives:
+  - SkillID: ass_p1
+    DisplayName: "\uB2EC\uC778"
+    Type: 0
+    EventType: 0
+  - SkillID: ass_p2
+    DisplayName: "\uD3EC\uCC29"
+    Type: 1
+    EventType: 0
+  - SkillID: ass_p3
+    DisplayName: "\uC5F0\uC0B4"
+    Type: 2
+    EventType: 1
+  Actives:
+  - SkillID: ass_a1
+    DisplayName: "\uADF8\uB9BC\uC790 \uC9C8\uC8FC(\uAC1C)"
+    Icon: {fileID: 0}
+    Cooldown: 6
+    Duration: 0
+    Radius: 100
+    DashDistance: 250
+    Multiplier: 2
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}
+  - SkillID: ass_a2
+    DisplayName: "\uCC98\uD615"
+    Icon: {fileID: 0}
+    Cooldown: 15
+    Duration: 0
+    Radius: 0
+    DashDistance: 0
+    Multiplier: 0
+    ThresholdPercent: 0.25
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}

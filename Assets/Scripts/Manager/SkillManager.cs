@@ -90,8 +90,8 @@ public class SkillManager : MonoBehaviour
             case "sni_p3": // 관통
                 stat.Piercing = true; break;
 
-            // ── 블랙메이지 ──
-            case "blk_p1": // 마력증폭
+            // ── 메이지 ──
+            case "mge_p1": // 마력증폭
                 stat.AddModifier(StatType.Attack, 20f); break;
 
             // ── 프리스트 ──
@@ -189,8 +189,8 @@ public class SkillManager : MonoBehaviour
             case "ran_p1": // 유격대 (이동 중)
                 return player.IsMoving;
 
-            // ── 블랙메이지 ──
-            case "blk_p2": // 유리대포 (HP 70% 이상)
+            // ── 메이지 ──
+            case "mge_p2": // 유리대포 (HP 70% 이상)
                 return stat.CurrentHealth / stat.FinalMaxHealth >= 0.7f;
 
             // ── 프리스트 ──
@@ -235,7 +235,7 @@ public class SkillManager : MonoBehaviour
             case "ran_p1":
                 stat.AddModifier(StatType.Attack, 15f);
                 stat.MulModifier(StatType.AttackSpeed, 0.5f); break;
-            case "blk_p2": stat.MulModifier(StatType.Attack, 1.0f); break;
+            case "mge_p2": stat.MulModifier(StatType.Attack, 1.0f); break;
             case "prs_p2":
                 stat.MulModifier(StatType.Attack, 0.5f);
                 player.RegenMultiplier = 2f; break;
@@ -269,7 +269,7 @@ public class SkillManager : MonoBehaviour
             case "ran_p1":
                 stat.RemoveModifier(StatType.Attack, 15f);
                 stat.DivModifier(StatType.AttackSpeed, 0.5f); break;
-            case "blk_p2": stat.DivModifier(StatType.Attack, 1.0f); break;
+            case "mge_p2": stat.DivModifier(StatType.Attack, 1.0f); break;
             case "prs_p2":
                 stat.DivModifier(StatType.Attack, 0.5f);
                 player.RegenMultiplier = 1f; break;
@@ -344,8 +344,8 @@ public class SkillManager : MonoBehaviour
                 if (Random.value <= 0.3f)
                     player.TriggerScatterShot(); break;
 
-            // ── 블랙메이지 ──
-            case "blk_p3": // 연쇄폭발 (ON_SKILL_USE)
+            // ── 메이지 ──
+            case "mge_p3": // 연쇄폭발 (ON_SKILL_USE)
                 player.ChainExplosionActive = true;
                 // ⚠️ ChainExplosionActive = false 리셋은
                 // Projectile 시스템에서 폭발 처리 후 수행 필요
@@ -476,11 +476,11 @@ public class SkillManager : MonoBehaviour
                 player.Stat.MulModifier(StatType.MoveSpeed, 1.0f);
                 player.Stat.MulModifier(StatType.AttackSpeed, 0.5f); break;
 
-            // ── 블랙메이지 ──
-            case "blk_a1": // 블랙홀 (반경 200 끌어당기며 ATK×1.5)
+            // ── 메이지 ──
+            case "mge_a1": // 블랙홀 (반경 200 끌어당기며 ATK×1.5)
                 StartCoroutine(BlackHole(player, enemies, data.Radius,
                     data.Multiplier, data.Duration)); break;
-            case "blk_a2": // 메테오 (반경 400, ATK×4.0)
+            case "mge_a2": // 메테오 (반경 400, ATK×4.0)
                 DealAreaDamage(player, enemies, data.Radius, data.Multiplier); break;
 
             // ── 프리스트 ──
@@ -618,7 +618,7 @@ public class SkillManager : MonoBehaviour
                 stat.RemoveModifier(StatType.Defense, 20f); break;
             case "sni_p1": stat.RemoveModifier(StatType.AttackRange, 100f); break;
             case "sni_p3": stat.Piercing = false; break;
-            case "blk_p1": stat.RemoveModifier(StatType.Attack, 20f); break;
+            case "mge_p1": stat.RemoveModifier(StatType.Attack, 20f); break;
             case "prs_p1":
                 stat.RemoveModifier(StatType.MaxHp, 150f);
                 stat.RemoveModifier(StatType.Regen, 20f); break;

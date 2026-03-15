@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 694e5227e2f031f4da81a6e9b6ba89bc, type: 3}
   m_Name: Enemy_Slime
   m_EditorClassIdentifier: 
-  EntityID: 
-  DisplayName: 
-  MaxHealth: 0
-  MoveSpeed: 0
+  EntityID: slime
+  DisplayName: "\uC2AC\uB77C\uC784"
+  MaxHealth: 80
+  MoveSpeed: 1.5
   Regen: 0
-  Attack: 0
+  Attack: 8
   Defense: 0
-  AttackSpeed: 0
-  AttackRange: 0
+  AttackSpeed: 0.8
+  AttackRange: 50
   CriticalChance: 0

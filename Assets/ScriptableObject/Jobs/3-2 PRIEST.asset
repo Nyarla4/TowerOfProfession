@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95a6d163f5777fc4c8b83a47d8a30998, type: 3}
+  m_Name: 3-2 PRIEST
+  m_EditorClassIdentifier: 
+  JobID: PRIEST
+  DisplayName: "\uD504\uB9AC\uC2A4\uD2B8"
+  AttackType: 2
+  JobColor: {r: 0, g: 0, b: 0, a: 0}
+  BonusMaxHp: 150
+  BonusAtk: 10
+  BonusDef: 10
+  BonusMoveSpeed: 0
+  BonusRegen: 15
+  BonusRange: 100
+  Passives:
+  - SkillID: prs_p1
+    DisplayName: "\uC2E0\uC131\uD55C \uC0DD\uBA85\uB825"
+    Type: 0
+    EventType: 0
+  - SkillID: prs_p2
+    DisplayName: "\uC2E0\uC758 \uAC00\uD638"
+    Type: 1
+    EventType: 0
+  - SkillID: prs_p3
+    DisplayName: "\uC0DD\uBA85\uD761\uC218"
+    Type: 2
+    EventType: 1
+  Actives:
+  - SkillID: prs_a1
+    DisplayName: "\uC2E0\uC131\uCE58\uC720"
+    Icon: {fileID: 0}
+    Cooldown: 10
+    Duration: 0
+    Radius: 0
+    DashDistance: 0
+    Multiplier: 0
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}
+  - SkillID: prs_a2
+    DisplayName: "\uC131\uC2A4\uB7EC\uC6B4 \uBD84\uB178"
+    Icon: {fileID: 0}
+    Cooldown: 12
+    Duration: 5
+    Radius: 0
+    DashDistance: 0
+    Multiplier: 0
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}

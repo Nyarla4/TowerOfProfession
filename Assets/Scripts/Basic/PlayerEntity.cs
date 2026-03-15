@@ -56,7 +56,7 @@ public class PlayerEntity : Entity
     /// <summary> 프리스트 흡혈 활성 (prs_a2) </summary>
     public bool LifeStealActive { get; set; }
 
-    /// <summary> 블랙메이지 연쇄폭발 플래그 (blk_p3) </summary>
+    /// <summary> 메이지 연쇄폭발 플래그 (mge_p3) </summary>
     public bool ChainExplosionActive { get; set; }
 
     /// <summary> 다음 투사체 크기 배율 (wiz_p3, 기본 1.0) </summary>

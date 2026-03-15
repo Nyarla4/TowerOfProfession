@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95a6d163f5777fc4c8b83a47d8a30998, type: 3}
+  m_Name: 2-1 SNIPER
+  m_EditorClassIdentifier: 
+  JobID: SNIPER
+  DisplayName: "\uC2A4\uB098\uC774\uD37C"
+  AttackType: 2
+  JobColor: {r: 0, g: 0, b: 0, a: 0}
+  BonusMaxHp: 0
+  BonusAtk: 30
+  BonusDef: -5
+  BonusMoveSpeed: 0
+  BonusRegen: 0
+  BonusRange: 200
+  Passives:
+  - SkillID: sni_p1
+    DisplayName: "\uC815\uBC00\uC870\uC900"
+    Type: 0
+    EventType: 0
+  - SkillID: sni_p2
+    DisplayName: "\uC644\uC804\uC9D1\uC911"
+    Type: 1
+    EventType: 0
+  - SkillID: sni_p3
+    DisplayName: "\uAD00\uD1B5"
+    Type: 0
+    EventType: 0
+  Actives:
+  - SkillID: sni_a1
+    DisplayName: "\uC800\uACA9"
+    Icon: {fileID: 0}
+    Cooldown: 8
+    Duration: 0
+    Radius: 0
+    DashDistance: 0
+    Multiplier: 4
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}
+  - SkillID: sni_a2
+    DisplayName: "\uC9D1\uC911\uC0AC\uACA9"
+    Icon: {fileID: 0}
+    Cooldown: 12
+    Duration: 3
+    Radius: 0
+    DashDistance: 0
+    Multiplier: 0
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}

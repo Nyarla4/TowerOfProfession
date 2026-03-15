@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95a6d163f5777fc4c8b83a47d8a30998, type: 3}
+  m_Name: 0 APPRENTICE
+  m_EditorClassIdentifier: 
+  JobID: APPRENTICE
+  DisplayName: "\uACAC\uC2B5"
+  AttackType: 0
+  JobColor: {r: 0, g: 0, b: 0, a: 0}
+  BonusMaxHp: 0
+  BonusAtk: 0
+  BonusDef: 0
+  BonusMoveSpeed: 0
+  BonusRegen: 0
+  BonusRange: 0
+  Passives:
+  - SkillID: app_p1
+    DisplayName: "\uAC00\uBCBC\uC6B4 \uBC1C\uAC78\uC74C"
+    Type: 0
+    EventType: 0
+  - SkillID: app_p2
+    DisplayName: "\uC704\uAE30 \uAC10\uC9C0"
+    Type: 1
+    EventType: 0
+  - SkillID: app_p3
+    DisplayName: "\uC9C0\uD61C\uB85C\uC6B4 \uD734\uC2DD"
+    Type: 1
+    EventType: 0
+  Actives:
+  - SkillID: app_a1
+    DisplayName: "\uC704\uD611\uC758 \uC678\uCE68"
+    Icon: {fileID: 0}
+    Cooldown: 8
+    Duration: 0
+    Radius: 120
+    DashDistance: 0
+    Multiplier: 1
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}
+  - SkillID: app_a2
+    DisplayName: "\uAE34\uAE09 \uD68C\uD53C"
+    Icon: {fileID: 0}
+    Cooldown: 5
+    Duration: 0
+    Radius: 0
+    DashDistance: 200
+    Multiplier: 0
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}

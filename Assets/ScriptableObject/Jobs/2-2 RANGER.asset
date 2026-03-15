@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95a6d163f5777fc4c8b83a47d8a30998, type: 3}
+  m_Name: 2-2 RANGER
+  m_EditorClassIdentifier: 
+  JobID: RANGER
+  DisplayName: "\uB808\uC778\uC800"
+  AttackType: 2
+  JobColor: {r: 0, g: 0, b: 0, a: 0}
+  BonusMaxHp: 0
+  BonusAtk: 20
+  BonusDef: 0
+  BonusMoveSpeed: 1
+  BonusRegen: 0
+  BonusRange: 100
+  Passives:
+  - SkillID: ran_p1
+    DisplayName: "\uC720\uACA9\uB300"
+    Type: 1
+    EventType: 0
+  - SkillID: ran_p2
+    DisplayName: "\uC5F0\uC18D\uAE30\uB3D9"
+    Type: 2
+    EventType: 2
+  - SkillID: ran_p3
+    DisplayName: "\uC0B0\uD0C4"
+    Type: 2
+    EventType: 2
+  Actives:
+  - SkillID: ran_a1
+    DisplayName: "\uD6C4\uD1F4\uB09C\uC0AC"
+    Icon: {fileID: 0}
+    Cooldown: 5
+    Duration: 0
+    Radius: 0
+    DashDistance: 150
+    Multiplier: 0
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}
+  - SkillID: ran_a2
+    DisplayName: "\uC804\uB825\uC9C8\uC8FC"
+    Icon: {fileID: 0}
+    Cooldown: 10
+    Duration: 4
+    Radius: 0
+    DashDistance: 0
+    Multiplier: 0
+    ThresholdPercent: 0
+    SelfHpCostPercent: 0
+    EffectPrefab: {fileID: 0}
