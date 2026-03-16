@@ -91,6 +91,7 @@ public class PlayerEntity : Entity
     private bool _instantAttackPending; // arc_a1, ran_a1 즉시 공격
     private bool _scatterShotPending;   // ran_p3 산탄
     private int _attackCount;           // CriticalEvery 카운터
+    private GameObject _projectilePrefab; // 현재 직업 투사체 프리팹 (ChangeJob에서 갱신)
 
     /// <summary> 연사 패시브 추가 공격 예약 (arc_p3) </summary>
     public void TriggerExtraAttack() => _extraAttackPending = true;
@@ -182,6 +183,9 @@ public class PlayerEntity : Entity
 
         // PERMANENT 패시브 적용
         SkillManager.Instance?.ApplyPermanentPassives(this, newJob);
+
+        // 투사체 프리팹 갱신
+        _projectilePrefab = newJob.ProjectilePrefab;
     }
 
     private void ResetFlags()
@@ -246,39 +250,81 @@ public class PlayerEntity : Entity
             transform.position, Stat.FinalAtkRange);
         if (target == null) return;
 
+        bool isRanged = CurrentJob != null &&
+            (CurrentJob.AttackType == AttackType.RANGED_SINGLE ||
+             CurrentJob.AttackType == AttackType.RANGED_AREA);
+
         // 즉시 공격 예약 처리
         if (_instantAttackPending)
         {
             _instantAttackPending = false;
-            ExecuteAttack(target);
+            if (isRanged) FireProjectile(target);
+            else          ExecuteAttack(target);
             return;
         }
 
         if (canAttack)
         {
             _lastAttackTime = Time.time;
-            ExecuteAttack(target);
             _lastCombatTime = Time.time;
 
-            // 연사 추가 공격
+            if (isRanged) FireProjectile(target);
+            else          ExecuteAttack(target);
+
+            // 연사 추가 공격 (arc_p3)
             if (_extraAttackPending)
             {
                 _extraAttackPending = false;
-                ExecuteAttack(target);
+                if (isRanged) FireProjectile(target);
+                else          ExecuteAttack(target);
             }
 
-            // 산탄 처리
+            // 산탄 (ran_p3) — ±15도 추가 2발
             if (_scatterShotPending)
             {
                 _scatterShotPending = false;
-                // ⚠️ 투사체 시스템 구현 시 산탄 투사체 2발 추가 발사 처리 필요
+                FireProjectile(target, -15f);
+                FireProjectile(target,  15f);
             }
         }
     }
 
+    // ─────────────────────────────────────────────
+    // 근접 공격
+    // ─────────────────────────────────────────────
+
     private void ExecuteAttack(Enemy target)
     {
-        // 치명타 판정
+        // MELEE_AREA (버서커) — 범위 내 전체 적 타격
+        if (CurrentJob != null && CurrentJob.AttackType == AttackType.MELEE_AREA)
+        {
+            float areaDmg = CalcMeleeDamage();
+            var allEnemies = EnemyManager.Instance?.GetAllEnemies() ?? new List<Enemy>();
+            for (int i = allEnemies.Count - 1; i >= 0; i--)
+            {
+                var e = allEnemies[i];
+                if (!e.IsAlive) continue;
+                if (Vector2.Distance(transform.position, e.transform.position)
+                    <= Stat.FinalAtkRange)
+                    e.TakeDamage(this, areaDmg);
+            }
+            PostAttackEffects(target);
+            return;
+        }
+
+        // MELEE_SINGLE — 단일 타겟
+        float dmg = CalcMeleeDamage();
+        target.TakeDamage(this, dmg);
+
+        // 흡혈 처리 (prs_a2)
+        if (LifeStealActive)
+            Stat.ChangeHealth(dmg * 0.2f);
+
+        PostAttackEffects(target);
+    }
+
+    private float CalcMeleeDamage()
+    {
         bool isCrit = Stat.ForceCrit;
 
         if (!isCrit && Stat.CriticalEvery > 0)
@@ -294,18 +340,71 @@ public class PlayerEntity : Entity
         if (!isCrit)
             isCrit = Random.value <= Stat.FinalCritChance;
 
-        float rawDmg = Stat.FinalAtk * (isCrit ? Stat.CriticalMultiplier : 1f);
-        target.TakeDamage(this, rawDmg);
+        return Stat.FinalAtk * (isCrit ? Stat.CriticalMultiplier : 1f);
+    }
 
-        // 흡혈 처리 (prs_a2)
-        if (LifeStealActive)
-            Stat.ChangeHealth(rawDmg * 0.2f);
-
-        // ON_ATTACK 이벤트 트리거
+    private void PostAttackEffects(Enemy target)
+    {
         SkillManager.Instance?.TriggerEventPassive(
             this, CurrentJob, EventType.ON_ATTACK, target);
-
         InvokeOnAttacked(target);
+    }
+
+    // ─────────────────────────────────────────────
+    // 원거리 공격
+    // ─────────────────────────────────────────────
+
+    /// <summary>
+    /// 원거리 자동 공격 투사체 발사
+    /// angleOffset: 산탄(ran_p3) 각도 오프셋(도)
+    /// </summary>
+    private void FireProjectile(Enemy target, float angleOffset = 0f)
+    {
+        if (_projectilePrefab == null)
+        {
+            Debug.LogWarning("PlayerEntity_FireProjectile: ProjectilePrefab 미설정");
+            return;
+        }
+
+        var go = PoolManager.SpawnOrInstance(
+            _projectilePrefab, transform.position, Quaternion.identity);
+
+        var proj = go.GetComponent<Projectile>();
+        if (proj == null)
+        {
+            Debug.LogError($"PlayerEntity_FireProjectile: {_projectilePrefab.name}에 Projectile 컴포넌트 없음");
+            PoolManager.ReleaseOrDestroy(_projectilePrefab, go);
+            return;
+        }
+
+        // 산탄 각도 적용
+        Vector3 targetPos = target.transform.position;
+        if (angleOffset != 0f)
+        {
+            Vector2 dir = (targetPos - transform.position).normalized;
+            float rad = angleOffset * Mathf.Deg2Rad;
+            float cos = Mathf.Cos(rad), sin = Mathf.Sin(rad);
+            dir = new Vector2(dir.x * cos - dir.y * sin,
+                              dir.x * sin + dir.y * cos);
+            targetPos = transform.position + (Vector3)(dir * 10f);
+        }
+
+        float areaRadius = CurrentJob != null &&
+            CurrentJob.AttackType == AttackType.RANGED_AREA ? 2f : 1.5f;
+
+        proj.Init(
+            attacker:       this,
+            targetPos:      targetPos,
+            damage:         Stat.FinalAtk,
+            attackType:     CurrentJob?.AttackType ?? AttackType.RANGED_SINGLE,
+            piercing:       Stat.Piercing,
+            scale:          NextProjectileScale,
+            chainExplosion: ChainExplosionActive,
+            areaRadius:     areaRadius
+        );
+
+        // 투사체 크기 배율 리셋 (wiz_p3 — 1발에만 적용)
+        NextProjectileScale = 1f;
     }
 
     // ─────────────────────────────────────────────

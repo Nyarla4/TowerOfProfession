@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using status;
 using UnityEngine;
 
@@ -29,6 +29,9 @@ public class Enemy : Entity
 
     /// <summary> 소속 스폰 그룹 ID (EnemyManager 리스폰 역참조용) </summary>
     public string GroupID { get; private set; }
+
+    /// <summary> 원거리 공격 투사체 프리팹 (Initialize에서 _statData.ProjectilePrefab으로 세팅) </summary>
+    private GameObject _projectilePrefab;
 
     // ─────────────────────────────────────────────
     // 공격 타이머
@@ -75,6 +78,7 @@ public class Enemy : Entity
         _spawnPos = transform.position;
         CurrentState = AiState.PATROL;
         _isForcedChase = false;
+        _projectilePrefab = data.ProjectilePrefab; // 원거리 적 투사체 세팅
         ClearStatusEffects();
     }
 
@@ -189,13 +193,55 @@ public class Enemy : Entity
             return;
         }
 
-        // 공격 실행
+        // 공격 실행 — AttackType에 따라 근접/원거리 분기
         float atkInterval = 1f / Mathf.Max(0.01f, Stat.FinalAtkSpd);
         if (Time.time - _lastAttackTime >= atkInterval)
         {
             _lastAttackTime = Time.time;
-            Attack(_target);
+
+            if (_statData.AttackType == AttackType.RANGED_SINGLE ||
+                _statData.AttackType == AttackType.RANGED_AREA)
+                FireProjectile(_target);
+            else
+                Attack(_target);
         }
+    }
+
+    // ─────────────────────────────────────────────
+    // 원거리 공격
+    // ─────────────────────────────────────────────
+
+    /// <summary> 원거리 공격 투사체 발사 </summary>
+    private void FireProjectile(PlayerEntity target)
+    {
+        if (_projectilePrefab == null)
+        {
+            Debug.LogWarning($"Enemy_FireProjectile: {name} ProjectilePrefab 미설정 — 근접 공격으로 대체");
+            Attack(target);
+            return;
+        }
+
+        var go = PoolManager.SpawnOrInstance(
+            _projectilePrefab, transform.position, Quaternion.identity);
+
+        var proj = go.GetComponent<Projectile>();
+        if (proj == null)
+        {
+            Debug.LogError($"Enemy_FireProjectile: {_projectilePrefab.name}에 Projectile 컴포넌트 없음");
+            PoolManager.ReleaseOrDestroy(_projectilePrefab, go);
+            return;
+        }
+
+        proj.Init(
+            attacker:       this,
+            targetPos:      target.transform.position,
+            damage:         Stat.FinalAtk,
+            attackType:     _statData.AttackType,
+            piercing:       false,
+            scale:          1f,
+            chainExplosion: false,
+            areaRadius:     1.5f
+        );
     }
 
     private void UpdateReturn()

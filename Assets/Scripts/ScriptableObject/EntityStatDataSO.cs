@@ -42,6 +42,12 @@ namespace status
         /// <summary> 치명 확률 (0.0~1.0) </summary>
         [Range(0, 1)] public float CriticalChance;
 
+        [Header("Attack Type")]
+        /// <summary> 근접/원거리 구분 </summary>
+        public AttackType AttackType;
+        /// <summary> 원거리 적 전용 투사체 프리팹 (MELEE 계열은 null) </summary>
+        public GameObject ProjectilePrefab;
+
         // Tip: 레벨업 성장이 필요하다면 AnimationCurve 구조 사용 권장
     }
 

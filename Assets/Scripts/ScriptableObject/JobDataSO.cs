@@ -9,6 +9,9 @@ public class JobDataSO : ScriptableObject
     public AttackType AttackType;
     public Color JobColor;
 
+    [Header("Attack")]
+    public GameObject ProjectilePrefab;
+
     [Header("Stat Bonus")]
     public float BonusMaxHp;
     public float BonusAtk;
