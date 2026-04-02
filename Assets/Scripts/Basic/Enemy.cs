@@ -236,11 +236,7 @@ public class Enemy : Entity
             attacker:       this,
             targetPos:      target.transform.position,
             damage:         Stat.FinalAtk,
-            attackType:     _statData.AttackType,
-            piercing:       false,
-            scale:          1f,
-            chainExplosion: false,
-            areaRadius:     1.5f
+            piercing:       false
         );
     }
 

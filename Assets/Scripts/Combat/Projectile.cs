@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -8,6 +8,9 @@ using UnityEngine;
 /// </summary>
 public class Projectile : MonoBehaviour, IPooledObject
 {
+    // 📢 투사체가 적을 맞췄음을 알리는 이벤트
+    public event Action<Projectile, Enemy> OnProjectileHit;
+
     // ─────────────────────────────────────────────
     // IPooledObject
     // ─────────────────────────────────────────────
@@ -33,11 +36,7 @@ public class Projectile : MonoBehaviour, IPooledObject
 
     private Entity _attacker;
     private float _damage;
-    private AttackType _attackType;
     private bool _piercing;
-    private float _scale;
-    private bool _chainExplosion;
-    private float _areaRadius;
 
     // ─────────────────────────────────────────────
     // 내부 상태
@@ -57,26 +56,15 @@ public class Projectile : MonoBehaviour, IPooledObject
         Entity attacker,
         Vector3 targetPos,
         float damage,
-        AttackType attackType,
-        bool piercing,
-        float scale,
-        bool chainExplosion,
-        float areaRadius)
+        bool piercing)
     {
         _attacker = attacker;
         _damage = damage;
-        _attackType = attackType;
         _piercing = piercing;
-        _scale = scale;
-        _chainExplosion = chainExplosion;
-        _areaRadius = areaRadius;
         _traveledDist = 0f;
 
         // 발사 방향
         _dir = (targetPos - transform.position).normalized;
-
-        // 크기 배율 적용 (wiz_p3)
-        transform.localScale = Vector3.one * _scale;
 
         // 투사체 회전 — 이동 방향으로
         float angle = Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg;
@@ -108,7 +96,14 @@ public class Projectile : MonoBehaviour, IPooledObject
         var enemy = other.GetComponent<Enemy>();
         if (enemy != null && enemy.IsAlive)
         {
-            Hit(enemy);
+            // 단일 데미지 처리
+            enemy.TakeDamage(_attacker, _damage);
+
+            // 💡 방송하기: "나 얘 맞췄어!" (광역/연쇄폭발은 밖에서 처리)
+            OnProjectileHit?.Invoke(this, enemy);
+
+            // 관통 속성이 없으면 풀 반환
+            if (!_piercing) ReturnToPool();
             return;
         }
 
@@ -122,58 +117,14 @@ public class Projectile : MonoBehaviour, IPooledObject
     }
 
     // ─────────────────────────────────────────────
-    // 데미지 처리
-    // ─────────────────────────────────────────────
-
-    private void Hit(Enemy enemy)
-    {
-        // 범위 폭발 (RANGED_AREA — 메이지 계열)
-        if (_attackType == AttackType.RANGED_AREA)
-        {
-            DealAreaDamage(enemy.transform.position);
-
-            // 연쇄폭발 (mge_p3) — 추가 범위 폭발
-            if (_chainExplosion)
-            {
-                DealAreaDamage(enemy.transform.position, _areaRadius * 1.5f);
-                // ChainExplosionActive 리셋 — attacker가 PlayerEntity인 경우만
-                if (_attacker is PlayerEntity playerEntity)
-                    playerEntity.ChainExplosionActive = false;
-            }
-
-            ReturnToPool();
-            return;
-        }
-
-        // 단일 타겟 데미지
-        enemy.TakeDamage(_attacker, _damage);
-
-        // 관통 (sni_p3) — 계속 진행
-        if (_piercing) return;
-
-        ReturnToPool();
-    }
-
-    private void DealAreaDamage(Vector3 center, float radius = -1f)
-    {
-        float r = radius > 0 ? radius : _areaRadius;
-        var allEnemies = EnemyManager.Instance?.GetAllEnemies() ?? new List<Enemy>();
-        for (int i = allEnemies.Count - 1; i >= 0; i--)
-        {
-            var e = allEnemies[i];
-            if (!e.IsAlive) continue;
-            if (Vector2.Distance(center, e.transform.position) <= r)
-                e.TakeDamage(_attacker, _damage);
-        }
-    }
-
-    // ─────────────────────────────────────────────
     // 풀 반환
     // ─────────────────────────────────────────────
 
     private void ReturnToPool()
     {
         transform.localScale = Vector3.one; // 스케일 초기화
+        // 💡 풀로 돌아가기 전에 기존 구독자 싹 날리기 (메모리 누수 및 다중 폭발 방지)
+        OnProjectileHit = null;
         PoolManager.ReleaseOrDestroy(OriginPrefab, gameObject);
     }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using status;
@@ -8,6 +9,10 @@ using UnityEngine;
 /// </summary>
 public class PlayerEntity : Entity
 {
+    // 스킬 로직 분리를 위한 전투 이벤트
+    public event Action<Enemy, float> OnAfterAttackHit;     // 근접/광역 타격 성공 직후
+    public event Action<Projectile> OnProjectileSpawned;    // 투사체 생성 직후
+
     // ─────────────────────────────────────────────
     // 외부 참조
     // ─────────────────────────────────────────────
@@ -44,63 +49,12 @@ public class PlayerEntity : Entity
     private const float TOWN_REGEN_TICK = 1f;       // 마을 회복 주기
 
     // ─────────────────────────────────────────────
-    // 전투 플래그 (SkillManager 연동)
-    // ─────────────────────────────────────────────
-
-    /// <summary> 팔라딘 성스러운 오라 활성 (pal_p2) </summary>
-    public bool HolyAuraActive { get; set; }
-
-    /// <summary> 독사 독 안개 활성 (vip_a1) </summary>
-    public bool PoisonAuraActive { get; set; }
-
-    /// <summary> 프리스트 흡혈 활성 (prs_a2) </summary>
-    public bool LifeStealActive { get; set; }
-
-    /// <summary> 메이지 연쇄폭발 플래그 (mge_p3) </summary>
-    public bool ChainExplosionActive { get; set; }
-
-    /// <summary> 다음 투사체 크기 배율 (wiz_p3, 기본 1.0) </summary>
-    public float NextProjectileScale { get; set; } = 1f;
-
-    // ─────────────────────────────────────────────
-    // 팔라딘 성스러운 오라 스택 (pal_p3)
-    // ─────────────────────────────────────────────
-
-    private int _holyStack = 0;
-    private const int HOLY_STACK_MAX = 10; // DEF+2 × 10 = +20 최대
-
-    public void AddHolyStack()
-    {
-        if (_holyStack >= HOLY_STACK_MAX) return;
-        _holyStack++;
-        Stat.AddModifier(StatType.Defense, 2f);
-    }
-
-    public void ClearHolyStack()
-    {
-        Stat.RemoveModifier(StatType.Defense, _holyStack * 2f);
-        _holyStack = 0;
-    }
-
-    // ─────────────────────────────────────────────
     // 자동 공격
     // ─────────────────────────────────────────────
 
     private float _lastAttackTime;
-    private bool _extraAttackPending;   // arc_p3 연사
-    private bool _instantAttackPending; // arc_a1, ran_a1 즉시 공격
-    private bool _scatterShotPending;   // ran_p3 산탄
     private int _attackCount;           // CriticalEvery 카운터
     private GameObject _projectilePrefab; // 현재 직업 투사체 프리팹 (ChangeJob에서 갱신)
-
-    /// <summary> 연사 패시브 추가 공격 예약 (arc_p3) </summary>
-    public void TriggerExtraAttack() => _extraAttackPending = true;
-
-    /// <summary> 즉시 공격 예약 (arc_a1, ran_a1) </summary>
-    public void TriggerInstantAttack() => _instantAttackPending = true;
-
-    /// <summary> 산탄 예약 (ran_p3) </summary>
-    public void TriggerScatterShot() => _scatterShotPending = true;
 
     // ─────────────────────────────────────────────
     // 대시
@@ -156,7 +110,6 @@ public class PlayerEntity : Entity
         // 이전 직업 보너스/패시브 제거 (재전직 스탯 누적 방지)
         if (CurrentJob != null)
         {
-            SkillManager.Instance?.RemovePermanentPassives(this, CurrentJob);
             Stat.RemoveModifier(StatType.MaxHp, CurrentJob.BonusMaxHp);
             Stat.RemoveModifier(StatType.Attack, CurrentJob.BonusAtk);
             Stat.RemoveModifier(StatType.Defense, CurrentJob.BonusDef);
@@ -166,10 +119,6 @@ public class PlayerEntity : Entity
         }
 
         CurrentJob = newJob;
-
-        // 스킬 상태 초기화 (버프 역적용 포함)
-        SkillManager.Instance?.ClearActiveBuffs(this);
-        SkillManager.Instance?.ResetOnJobChange();
         ResetFlags();
 
         // 새 직업 스탯 보너스 적용
@@ -182,7 +131,7 @@ public class PlayerEntity : Entity
         Stat.AddModifier(StatType.AttackRange, newJob.BonusRange);
 
         // PERMANENT 패시브 적용
-        SkillManager.Instance?.ApplyPermanentPassives(this, newJob);
+        SkillManager.Instance?.ApplyJobSkills(this, newJob);
 
         // 투사체 프리팹 갱신
         _projectilePrefab = newJob.ProjectilePrefab;
@@ -190,14 +139,8 @@ public class PlayerEntity : Entity
 
     private void ResetFlags()
     {
-        HolyAuraActive = false;
-        PoisonAuraActive = false;
-        LifeStealActive = false;
-        ChainExplosionActive = false;
-        NextProjectileScale = 1f;
         RegenMultiplier = 1f;
         _attackCount = 0;
-        ClearHolyStack();
     }
 
     // ─────────────────────────────────────────────
@@ -229,10 +172,6 @@ public class PlayerEntity : Entity
         Move(GetMoveDir());
         UpdateAutoAttack();
         UpdateRegen();
-
-        var enemies = EnemyManager.Instance?.GetAllEnemies() ?? new List<Enemy>();
-        SkillManager.Instance?.UpdateConditionPassives(this, CurrentJob, enemies);
-        SkillManager.Instance?.CheckSkillEndTimes(this, CurrentJob);
     }
 
     // ─────────────────────────────────────────────
@@ -244,7 +183,6 @@ public class PlayerEntity : Entity
         float atkInterval = 1f / Mathf.Max(0.01f, Stat.FinalAtkSpd);
 
         bool canAttack = Time.time - _lastAttackTime >= atkInterval;
-        if (!canAttack && !_instantAttackPending) return;
 
         var target = EnemyManager.Instance?.GetNearestInRange(
             transform.position, Stat.FinalAtkRange);
@@ -254,15 +192,6 @@ public class PlayerEntity : Entity
             (CurrentJob.AttackType == AttackType.RANGED_SINGLE ||
              CurrentJob.AttackType == AttackType.RANGED_AREA);
 
-        // 즉시 공격 예약 처리
-        if (_instantAttackPending)
-        {
-            _instantAttackPending = false;
-            if (isRanged) FireProjectile(target);
-            else          ExecuteAttack(target);
-            return;
-        }
-
         if (canAttack)
         {
             _lastAttackTime = Time.time;
@@ -270,22 +199,6 @@ public class PlayerEntity : Entity
 
             if (isRanged) FireProjectile(target);
             else          ExecuteAttack(target);
-
-            // 연사 추가 공격 (arc_p3)
-            if (_extraAttackPending)
-            {
-                _extraAttackPending = false;
-                if (isRanged) FireProjectile(target);
-                else          ExecuteAttack(target);
-            }
-
-            // 산탄 (ran_p3) — ±15도 추가 2발
-            if (_scatterShotPending)
-            {
-                _scatterShotPending = false;
-                FireProjectile(target, -15f);
-                FireProjectile(target,  15f);
-            }
         }
     }
 
@@ -295,10 +208,11 @@ public class PlayerEntity : Entity
 
     private void ExecuteAttack(Enemy target)
     {
+        float dmg = CalcMeleeDamage();
+
         // MELEE_AREA (버서커) — 범위 내 전체 적 타격
         if (CurrentJob != null && CurrentJob.AttackType == AttackType.MELEE_AREA)
         {
-            float areaDmg = CalcMeleeDamage();
             var allEnemies = EnemyManager.Instance?.GetAllEnemies() ?? new List<Enemy>();
             for (int i = allEnemies.Count - 1; i >= 0; i--)
             {
@@ -306,21 +220,18 @@ public class PlayerEntity : Entity
                 if (!e.IsAlive) continue;
                 if (Vector2.Distance(transform.position, e.transform.position)
                     <= Stat.FinalAtkRange)
-                    e.TakeDamage(this, areaDmg);
+                {
+                    e.TakeDamage(this, dmg);
+                    OnAfterAttackHit?.Invoke(target, dmg);
+                }
             }
-            PostAttackEffects(target);
-            return;
         }
-
         // MELEE_SINGLE — 단일 타겟
-        float dmg = CalcMeleeDamage();
-        target.TakeDamage(this, dmg);
-
-        // 흡혈 처리 (prs_a2)
-        if (LifeStealActive)
-            Stat.ChangeHealth(dmg * 0.2f);
-
-        PostAttackEffects(target);
+        else
+        {
+            target.TakeDamage(this, dmg);
+            OnAfterAttackHit?.Invoke(target, dmg);
+        }
     }
 
     private float CalcMeleeDamage()
@@ -338,16 +249,9 @@ public class PlayerEntity : Entity
         }
 
         if (!isCrit)
-            isCrit = Random.value <= Stat.FinalCritChance;
+            isCrit = UnityEngine.Random.value <= Stat.FinalCritChance;
 
         return Stat.FinalAtk * (isCrit ? Stat.CriticalMultiplier : 1f);
-    }
-
-    private void PostAttackEffects(Enemy target)
-    {
-        SkillManager.Instance?.TriggerEventPassive(
-            this, CurrentJob, EventType.ON_ATTACK, target);
-        InvokeOnAttacked(target);
     }
 
     // ─────────────────────────────────────────────
@@ -389,22 +293,15 @@ public class PlayerEntity : Entity
             targetPos = transform.position + (Vector3)(dir * 10f);
         }
 
-        float areaRadius = CurrentJob != null &&
-            CurrentJob.AttackType == AttackType.RANGED_AREA ? 2f : 1.5f;
-
         proj.Init(
             attacker:       this,
             targetPos:      targetPos,
             damage:         Stat.FinalAtk,
-            attackType:     CurrentJob?.AttackType ?? AttackType.RANGED_SINGLE,
-            piercing:       Stat.Piercing,
-            scale:          NextProjectileScale,
-            chainExplosion: ChainExplosionActive,
-            areaRadius:     areaRadius
+            piercing:       Stat.Piercing
         );
 
-        // 투사체 크기 배율 리셋 (wiz_p3 — 1발에만 적용)
-        NextProjectileScale = 1f;
+        // 투사체 생성 직후 방송
+        OnProjectileSpawned?.Invoke(proj);
     }
 
     // ─────────────────────────────────────────────
@@ -452,10 +349,6 @@ public class PlayerEntity : Entity
         _isDead = false;
         transform.position = spawnPos;
 
-        // 버프 중 사망 시 잔존 스탯 효과 역적용 후 클리어
-        SkillManager.Instance?.ClearActiveBuffs(this);
-        SkillManager.Instance?.ResetOnJobChange();
-
         Stat.ClearInvincible();
         Stat.ForceCrit = false;
         ResetFlags(); // 공격 예약 플래그 + _attackCount 초기화
@@ -463,5 +356,28 @@ public class PlayerEntity : Entity
         // 직업 보너스 / PERMANENT 패시브는 ChangeJob 시점에 이미 Additional에 적재됨
         // Respawn은 Stat을 new로 재생성하지 않으므로 재적용 불필요 — 여기서 AddModifier 하면 리스폰마다 2중 누적됨
         Stat.SetHealth(Stat.FinalMaxHealth);
+    }
+
+    // [클래스 내부 추가]
+    // 직업 변경, 사망, 혹은 씬 전환 시 기존 구독을 날리기 위한 메서드
+    public void ClearCombatEvents()
+    {
+        OnAfterAttackHit = null;
+        OnProjectileSpawned = null;
+    }
+
+    // [클래스 내부에 추가]
+    // ─────────────────────────────────────────────
+    // 외부 스킬 강제 실행용 (SkillManager에서 호출)
+    // ─────────────────────────────────────────────
+
+    public void ForceExecuteAttack(Enemy target)
+    {
+        if (target != null && target.IsAlive) ExecuteAttack(target);
+    }
+
+    public void ForceFireProjectile(Enemy target)
+    {
+        if (target != null && target.IsAlive) FireProjectile(target);
     }
 }

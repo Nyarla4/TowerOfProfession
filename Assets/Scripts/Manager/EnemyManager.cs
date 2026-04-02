@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ using UnityEngine;
 /// </summary>
 public class EnemyManager : MonoBehaviour
 {
+    public event Action<Enemy, SpawnGroup> OnEnemyDiedGlobal;
+
     public static EnemyManager Instance { get; private set; }
 
     // ─────────────────────────────────────────────
@@ -32,22 +35,6 @@ public class EnemyManager : MonoBehaviour
     // ─────────────────────────────────────────────
 
     private List<Enemy> _enemies = new();
-
-    // 도발 상태 적 추적 (pal_a2)
-    private List<Enemy> _forcedChaseEnemies = new();
-
-    // ─────────────────────────────────────────────
-    // 범위 효과 (독안개 / 성스러운 오라)
-    // ─────────────────────────────────────────────
-
-    [Header("Aura Settings")]
-    [SerializeField] private float _poisonAuraRadius = 150f;
-    [SerializeField] private float _poisonAuraTick = 1f;
-    [SerializeField] private float _holyAuraRadius = 150f;
-    [SerializeField] private float _holyAuraTick = 1f;
-
-    private float _poisonAuraTimer;
-    private float _holyAuraTimer;
 
     // ─────────────────────────────────────────────
     // 플레이어 참조
@@ -76,8 +63,7 @@ public class EnemyManager : MonoBehaviour
 
     private void Update()
     {
-        UpdatePoisonAura();
-        UpdateHolyAura();
+
     }
 
     // ─────────────────────────────────────────────
@@ -102,7 +88,7 @@ public class EnemyManager : MonoBehaviour
 
         for (int i = 0; i < group.MaxCount; i++)
         {
-            var point = group.SpawnPoints[Random.Range(0, group.SpawnPoints.Length)];
+            var point = group.SpawnPoints[UnityEngine.Random.Range(0, group.SpawnPoints.Length)];
             SpawnEnemy(group.EnemyPrefab, point.position, group.GroupID);
             yield return null;
         }
@@ -131,7 +117,6 @@ public class EnemyManager : MonoBehaviour
     private void OnEnemyDead(Enemy enemy)
     {
         _enemies.Remove(enemy);
-        _forcedChaseEnemies.Remove(enemy);
 
         // 그룹 탐색 1회 후 리스폰/경험치에 공용 사용
         var group = FindGroupByPrefab(enemy);
@@ -142,7 +127,7 @@ public class EnemyManager : MonoBehaviour
         // 리스폰 처리
         if (group != null)
         {
-            var point = group.SpawnPoints[Random.Range(0, group.SpawnPoints.Length)];
+            var point = group.SpawnPoints[UnityEngine.Random.Range(0, group.SpawnPoints.Length)];
             StartCoroutine(RespawnAfterDelay(group, point.position));
         }
 
@@ -183,103 +168,7 @@ public class EnemyManager : MonoBehaviour
     {
         if (_player == null) return;
 
-        // 경험치 지급
-        if (group != null)
-            PlayerManager.Instance?.GainExp(group.ExpReward);
-
-        SkillManager.Instance?.TriggerEventPassive(
-            _player, _player.CurrentJob, EventType.ON_KILL, deadEnemy);
-    }
-
-    // ─────────────────────────────────────────────
-    // 도발 관리 (pal_a2)
-    // ─────────────────────────────────────────────
-
-    /// <summary> 도발 종료 후 전체 강제추적 적 RETURN </summary>
-    public void ReturnForcedChaseEnemies()
-    {
-        foreach (var enemy in _forcedChaseEnemies)
-        {
-            if (enemy != null && enemy.IsAlive)
-                enemy.ReturnFromForceChase();
-        }
-        _forcedChaseEnemies.Clear();
-    }
-
-    /// <summary> 도발 적 등록 (ForceChase 호출 시 자동 추적용) </summary>
-    public void RegisterForcedChase(Enemy enemy)
-    {
-        if (!_forcedChaseEnemies.Contains(enemy))
-            _forcedChaseEnemies.Add(enemy);
-    }
-
-    // ─────────────────────────────────────────────
-    // 범위 효과 — 독안개 (vip_a1)
-    // ─────────────────────────────────────────────
-
-    private void UpdatePoisonAura()
-    {
-        if (_player == null || !_player.PoisonAuraActive) return;
-
-        _poisonAuraTimer += Time.deltaTime;
-        if (_poisonAuraTimer < _poisonAuraTick) return;
-        _poisonAuraTimer = 0f;
-
-        var pos = _player.transform.position;
-        float dmg = _player.Stat.FinalAtk * 0.3f * _player.Stat.PoisonDamageMultiplier;
-        float dur = _player.Stat.PoisonDuration > 0 ? _player.Stat.PoisonDuration : 3f;
-
-        for (int i = _enemies.Count - 1; i >= 0; i--)
-        {
-            var enemy = _enemies[i];
-            if (!enemy.IsAlive) continue;
-            if (Vector2.Distance(pos, enemy.transform.position) <= _poisonAuraRadius)
-                enemy.ApplyPoison(dmg, dur);
-        }
-    }
-
-    // ─────────────────────────────────────────────
-    // 범위 효과 — 성스러운 오라 (pal_p2)
-    // ─────────────────────────────────────────────
-
-    private void UpdateHolyAura()
-    {
-        if (_player == null || !_player.HolyAuraActive) return;
-
-        _holyAuraTimer += Time.deltaTime;
-        if (_holyAuraTimer < _holyAuraTick) return;
-        _holyAuraTimer = 0f;
-
-        var pos = _player.transform.position;
-        float healAmount = _player.Stat.FinalRegen * 0.5f;
-
-        for (int i = _enemies.Count - 1; i >= 0; i--)
-        {
-            var enemy = _enemies[i];
-            if (!enemy.IsAlive) continue;
-            if (Vector2.Distance(pos, enemy.transform.position) <= _holyAuraRadius)
-            {
-                // 근처 적에게 약화 효과 (ATK -10%)
-                // ⚠️ 적 전투 디버프 시스템 구현 시 정교화 필요
-                // 현재는 플레이어 회복으로 처리
-            }
-        }
-
-        // 팔라딘 오라: 주변 적 존재 시 플레이어 회복
-        bool hasNearby = false;
-        for (int i = _enemies.Count - 1; i >= 0; i--)
-        {
-            var enemy = _enemies[i];
-            if (!enemy.IsAlive) continue;
-            if (Vector2.Distance(pos, enemy.transform.position) <= _holyAuraRadius)
-            {
-                hasNearby = true;
-                break;
-            }
-        }
-
-        if (hasNearby)
-            _player.TakeHeal(healAmount);
+        OnEnemyDiedGlobal?.Invoke(deadEnemy, group);
     }
 
     // ─────────────────────────────────────────────
