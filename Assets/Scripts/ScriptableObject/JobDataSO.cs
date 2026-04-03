@@ -4,7 +4,7 @@ using UnityEngine;
 public class JobDataSO : ScriptableObject
 {
     [Header("Identity")]
-    public string JobID;
+    public JobID JobID;
     public string DisplayName;
     public AttackType AttackType;
     public Color JobColor;

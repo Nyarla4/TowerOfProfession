@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95a6d163f5777fc4c8b83a47d8a30998, type: 3}
   m_Name: 3-1 MAGE
   m_EditorClassIdentifier: 
-  JobID: MAGE
+  JobID: 10
   DisplayName: "\uBA54\uC774\uC9C0"
   AttackType: 3
   JobColor: {r: 0, g: 0, b: 0, a: 0}
+  ProjectilePrefab: {fileID: 0}
   BonusMaxHp: -50
   BonusAtk: 40
   BonusDef: -10

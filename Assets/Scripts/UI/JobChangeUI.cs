@@ -33,27 +33,69 @@ public class JobChangeUI : MonoBehaviour
     [SerializeField] private TMP_Text _levelReqText;
 
     // 현재 직업 JobID → 선택 가능한 다음 직업 JobID 목록
-    private static readonly System.Collections.Generic.Dictionary<string, string[]> _jobTree
+    private static readonly System.Collections.Generic.Dictionary<JobID, JobID[]> _jobTree
         = new()
     {
-        { "APPRENTICE", new[] { "WARRIOR",   "ARCHER",  "WIZARD",  "ROGUE"   } },
-        { "WARRIOR",    new[] { "BERSERKER",  "PALADIN"                       } },
-        { "ARCHER",     new[] { "SNIPER",     "RANGER"                        } },
-        { "WIZARD",     new[] { "MAGE",       "PRIEST"                        } },
-        { "ROGUE",      new[] { "ASSASSIN",   "VIPER"                         } },
-    };
+            { JobID.APPRENTICE, new[] { JobID.WARRIOR, JobID.ARCHER, JobID.WIZARD, JobID.ROGUE } },
+            { JobID.WARRIOR, new[] { JobID.BERSERKER, JobID.PALADIN } },
+            { JobID.ARCHER, new[] { JobID.SNIPER, JobID.RANGER } },
+            { JobID.WIZARD, new[] { JobID.MAGE, JobID.PRIEST } },
+            { JobID.ROGUE, new[] { JobID.ASSASSIN, JobID.VIPER } },
+        };
 
     // JobID → 한국어 표시명
-    private static readonly System.Collections.Generic.Dictionary<string, string> _jobNames
+    private static readonly System.Collections.Generic.Dictionary<JobID, string> _jobNames
         = new()
-    {
-        { "WARRIOR",   "전사"    }, { "ARCHER",   "궁수"    },
-        { "WIZARD",    "마법사"  }, { "ROGUE",    "도적"    },
-        { "BERSERKER", "버서커"  }, { "PALADIN",  "팔라딘"  },
-        { "SNIPER",    "스나이퍼"}, { "RANGER",   "레인저"  },
-        { "MAGE",      "메이지"  }, { "PRIEST",   "프리스트"},
-        { "ASSASSIN",  "어쌔신"  }, { "VIPER",    "독사"    },
-    };
+        {
+            {
+                JobID.WARRIOR,
+                "전사"
+            },
+            {
+                JobID.ARCHER,
+                "궁수"
+            },
+            {
+                JobID.WIZARD,
+                "마법사"
+            },
+            {
+                JobID.ROGUE,
+                "도적"
+            },
+            {
+                JobID.BERSERKER,
+                "버서커"
+            },
+            {
+                JobID.PALADIN,
+                "팔라딘"
+            },
+            {
+                JobID.SNIPER,
+                "스나이퍼"
+            },
+            {
+                JobID.RANGER,
+                "레인저"
+            },
+            {
+                JobID.MAGE,
+                "메이지"
+            },
+            {
+                JobID.PRIEST,
+                "프리스트"
+            },
+            {
+                JobID.ASSASSIN,
+                "어쌔신"
+            },
+            {
+                JobID.VIPER,
+                "독사"
+            },
+        };
 
     private PlayerEntity  _player;
     private PlayerManager _playerManager;
@@ -90,10 +132,10 @@ public class JobChangeUI : MonoBehaviour
     private bool CanChangeJob()
     {
         if (_player?.CurrentJob == null) return false;
-        string jobId = _player.CurrentJob.JobID;
+        JobID jobId = _player.CurrentJob.JobID;
         int level    = _playerManager.Level;
 
-        if (jobId == "APPRENTICE")
+        if (jobId == JobID.APPRENTICE)
             return level >= _firstJobLevel && _jobTree.ContainsKey(jobId);
 
         if (_jobTree.ContainsKey(jobId))
@@ -127,9 +169,9 @@ public class JobChangeUI : MonoBehaviour
 
     private void RefreshButtons()
     {
-        string currentJobId = _player?.CurrentJob?.JobID ?? "";
-        string[] options = _jobTree.ContainsKey(currentJobId)
-            ? _jobTree[currentJobId] : new string[0];
+        JobID currentJobId = _player?.CurrentJob?.JobID ?? JobID.NONE;
+        JobID[] options = _jobTree.ContainsKey(currentJobId)
+            ? _jobTree[currentJobId] : new JobID[0];
 
         for (int i = 0; i < _buttons.Length; i++)
         {
@@ -137,12 +179,12 @@ public class JobChangeUI : MonoBehaviour
 
             if (i < options.Length)
             {
-                string jobId = options[i]; // 클로저 캡처 방지용 로컬 변수
+                JobID jobId = options[i]; // 클로저 캡처 방지용 로컬 변수
                 _buttons[i].gameObject.SetActive(true);
                 _buttons[i].onClick.RemoveAllListeners();
                 _buttons[i].onClick.AddListener(() => ChangeJobTo(jobId));
                 if (_labels[i] != null)
-                    _labels[i].text = _jobNames.ContainsKey(jobId) ? _jobNames[jobId] : jobId;
+                    _labels[i].text = _jobNames.ContainsKey(jobId) ? _jobNames[jobId] : jobId.ToString();
             }
             else
             {
@@ -155,7 +197,7 @@ public class JobChangeUI : MonoBehaviour
     // 전직 실행
     // ─────────────────────────────────────────────
 
-    private void ChangeJobTo(string jobId)
+    private void ChangeJobTo(JobID jobId)
     {
         var job = GameManager.Instance?.GetJobById(jobId);
         if (job == null)
@@ -180,8 +222,8 @@ public class JobChangeUI : MonoBehaviour
 
         if (_levelReqText != null)
         {
-            string jobId = _player?.CurrentJob?.JobID ?? "";
-            int req = jobId == "APPRENTICE" ? _firstJobLevel : _secondJobLevel;
+            JobID jobId = _player?.CurrentJob?.JobID ?? JobID.NONE;
+            int req = jobId == JobID.APPRENTICE ? _firstJobLevel : _secondJobLevel;
             _levelReqText.text = $"전직 가능 레벨: {req}";
         }
     }

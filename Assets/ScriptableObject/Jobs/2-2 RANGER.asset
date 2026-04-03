@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95a6d163f5777fc4c8b83a47d8a30998, type: 3}
   m_Name: 2-2 RANGER
   m_EditorClassIdentifier: 
-  JobID: RANGER
+  JobID: 9
   DisplayName: "\uB808\uC778\uC800"
   AttackType: 2
   JobColor: {r: 0, g: 0, b: 0, a: 0}
+  ProjectilePrefab: {fileID: 0}
   BonusMaxHp: 0
   BonusAtk: 20
   BonusDef: 0

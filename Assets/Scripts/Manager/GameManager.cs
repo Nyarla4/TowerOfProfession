@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
         _player.Initialize(_playerStatData);
 
         // 초기 직업(견습) 적용
-        var startJob = GetJobById("APPRENTICE");
+        var startJob = GetJobById(JobID.APPRENTICE);
         if (startJob != null)
             _player.ChangeJob(startJob);
 
@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
         {
             level              = PlayerManager.Instance != null ? PlayerManager.Instance.Level : 1,
             exp                = PlayerManager.Instance != null ? PlayerManager.Instance.Exp   : 0f,
-            jobId              = _player.CurrentJob != null ? _player.CurrentJob.JobID : "APPRENTICE",
+            jobId              = _player.CurrentJob != null ? _player.CurrentJob.JobID : JobID.APPRENTICE,
             hp                 = _player.Stat.CurrentHealth,
             statPoints         = PlayerManager.Instance != null ? PlayerManager.Instance.StatPoints : 0,
             lastSpawnPointName = _defaultSpawnPoint != null ? _defaultSpawnPoint.name : "",
@@ -177,7 +177,7 @@ public class GameManager : MonoBehaviour
     // 유틸
     // ─────────────────────────────────────────────
 
-    public JobDataSO GetJobById(string jobId)
+    public JobDataSO GetJobById(JobID jobId)
     {
         if (_allJobs == null) return null;
         foreach (var job in _allJobs)

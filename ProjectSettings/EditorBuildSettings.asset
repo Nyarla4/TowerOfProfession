@@ -12,8 +12,11 @@ EditorBuildSettings:
     path: Assets/Scenes/Title.unity
     guid: 2280cefb016559b459717ff24bbe40f0
   - enabled: 1
-    path: Assets/Scenes/Room.unity
+    path: Assets/Scenes/TestCombat.unity
     guid: 7e26e66a7cd599a4cb95766a470019d6
+  - enabled: 1
+    path: Assets/Scenes/Room.unity
+    guid: fa586f7a7330e1040a7219a4f618dc40
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

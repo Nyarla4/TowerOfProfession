@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95a6d163f5777fc4c8b83a47d8a30998, type: 3}
   m_Name: 1-2 PALADIN
   m_EditorClassIdentifier: 
-  JobID: PALADIN
+  JobID: 7
   DisplayName: "\uD314\uB77C\uB518"
   AttackType: 0
   JobColor: {r: 0, g: 0, b: 0, a: 0}
+  ProjectilePrefab: {fileID: 0}
   BonusMaxHp: 200
   BonusAtk: 5
   BonusDef: 30

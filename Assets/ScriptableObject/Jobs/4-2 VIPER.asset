@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95a6d163f5777fc4c8b83a47d8a30998, type: 3}
   m_Name: 4-2 VIPER
   m_EditorClassIdentifier: 
-  JobID: VIPER
+  JobID: 13
   DisplayName: "\uB3C5\uC0AC"
   AttackType: 2
   JobColor: {r: 0, g: 0, b: 0, a: 0}
+  ProjectilePrefab: {fileID: 0}
   BonusMaxHp: 0
   BonusAtk: 15
   BonusDef: 0

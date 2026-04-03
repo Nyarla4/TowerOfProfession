@@ -88,7 +88,7 @@ public class PlayData
     // 기본 정보
     public int level = 1;
     public float exp = 0f;
-    public string jobId = "APPRENTICE";
+    public JobID jobId = JobID.APPRENTICE;
     public int statPoints = 0;
 
     // 전투
