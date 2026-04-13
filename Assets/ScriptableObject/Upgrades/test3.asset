@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a4ece948a4993941af81f238a2cd06e, type: 3}
   m_Name: test3
   m_EditorClassIdentifier: 
-  UpgradeID: test2
-  UpgradeName: "\uB9C8\uBC95\uC0AC \uC2A4\uD0AC \uCE74\uB4DC"
+  UpgradeID: test3
+  UpgradeName: "\uC804\uC0AC \uC2A4\uD0EF \uCE74\uB4DC"
   Description: 
   Icon: {fileID: 0}
-  RequiredJob: 4
-  Type: 2
-  TargetStat: 2
-  StatValue: 5
+  RequiredJob: 2
+  Type: 0
+  TargetStat: 0
+  StatValue: 20
   ModifierID: mge_mod_3way

@@ -150,4 +150,31 @@ public class SkillManager : MonoBehaviour
     {
         _cooldownMap[skillID] = Time.time;
     }
+
+    // ─────────────────────────────────────────────
+    // 강화 카드(업그레이드 모디파이어) 추적
+    // ─────────────────────────────────────────────
+
+    // 유저가 획득한 패시브/스킬 변형 ID들을 중복 없이 저장하는 보관소
+    private HashSet<string> _acquiredModifiers = new HashSet<string>();
+
+    /// <summary>
+    /// LevelUpManager에서 카드를 선택했을 때 호출되어 변형 ID를 주입합니다.
+    /// </summary>
+    public void AddUpgradeModifier(string modID)
+    {
+        // 공용 스탯 카드처럼 ModifierID가 없는 경우는 무시
+        if (string.IsNullOrEmpty(modID)) return;
+
+        _acquiredModifiers.Add(modID);
+        Debug.Log($"[SkillManager] 모디파이어 획득 완료: {modID}");
+    }
+
+    /// <summary>
+    /// 이후 스킬이 발동될 때, 특정 모디파이어(예: 다중발사)를 가지고 있는지 검사할 때 사용합니다.
+    /// </summary>
+    public bool HasModifier(string modID)
+    {
+        return _acquiredModifiers.Contains(modID);
+    }
 }
