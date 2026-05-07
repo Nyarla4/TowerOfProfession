@@ -86,7 +86,7 @@ public class SkillManager : MonoBehaviour
             if (Vector2.Distance(center, e.transform.position) <= radius)
             {
                 // 여기서 다시 OnProjectileHit가 발생하지 않도록 주의 (직접 TakeDamage만 호출)
-                e.TakeDamage(null, damage);
+                e.TakeDamage(proj.Attacker, damage);
             }
         }
     }

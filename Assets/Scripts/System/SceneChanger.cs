@@ -13,15 +13,7 @@ public class SceneChanger : MonoBehaviour
     public static void ToScene(Scenes scenes)
     {
         string sceneName = scenes.ToString();
-        var sceneIdx = SceneUtility.GetBuildIndexByScenePath(sceneName);
-        
-        if (sceneIdx < 0)
-        {
-            Debug.Log("해당 Scene 없음");
-            return;
-        }
-
-        SceneManager.LoadScene(sceneIdx);
+        SceneManager.LoadScene(sceneName);
     }
 
     public static void ToRoom()

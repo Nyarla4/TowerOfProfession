@@ -35,6 +35,7 @@ public class Projectile : MonoBehaviour, IPooledObject
     // ─────────────────────────────────────────────
 
     private Entity _attacker;
+    public Entity Attacker => _attacker;
     private float _damage;
     private bool _piercing;
 
