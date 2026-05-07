@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -96,12 +96,12 @@ public class EnemyManager : MonoBehaviour
 
     private Enemy SpawnEnemy(GameObject prefab, Vector3 pos, string groupId = "")
     {
-        var go = Instantiate(prefab, pos, Quaternion.identity);
+        var go = PoolManager.SpawnOrInstance(prefab, pos, Quaternion.identity);
         var enemy = go.GetComponent<Enemy>();
         if (enemy == null)
         {
             Debug.LogWarning("EnemyManager_SpawnEnemy: Enemy 컴포넌트 없음");
-            Destroy(go);
+            PoolManager.ReleaseOrDestroy(prefab, go);
             return null;
         }
 
@@ -131,8 +131,9 @@ public class EnemyManager : MonoBehaviour
             StartCoroutine(RespawnAfterDelay(group, point.position));
         }
 
-        // 오브젝트 지연 제거
-        StartCoroutine(DespawnAfterDelay(enemy.gameObject, 2f));
+        // 오브젝트 지연 제거 (Pool 반환)
+        if (group != null)
+            StartCoroutine(DespawnAfterDelay(group.EnemyPrefab, enemy.gameObject, 2f));
     }
 
     private IEnumerator RespawnAfterDelay(SpawnGroup group, Vector3 pos)
@@ -141,10 +142,10 @@ public class EnemyManager : MonoBehaviour
         SpawnEnemy(group.EnemyPrefab, pos, group.GroupID);
     }
 
-    private IEnumerator DespawnAfterDelay(GameObject go, float delay)
+    private IEnumerator DespawnAfterDelay(GameObject prefab, GameObject go, float delay)
     {
         yield return new WaitForSeconds(delay);
-        if (go != null) Destroy(go);
+        if (go != null) PoolManager.ReleaseOrDestroy(prefab, go);
     }
 
     private SpawnGroup FindGroupByPrefab(Enemy enemy)

@@ -12,7 +12,7 @@ public class Enemy : Entity
     // AI 상태
     // ─────────────────────────────────────────────
 
-    public enum AiState { PATROL, CHASE, ATTACK, RETURN, FLEE }
+    public enum AiState { PATROL, CHASE, ATTACK, RETURN, FLEE, RESTORE }
 
     public AiState CurrentState { get; private set; } = AiState.PATROL;
 
@@ -130,8 +130,9 @@ public class Enemy : Entity
             case AiState.ATTACK: UpdateAttack(); break;
             case AiState.RETURN: UpdateReturn(); break;
             case AiState.FLEE: UpdateFlee(); break;
-        }
-    }
+            case AiState.RESTORE: UpdateRestore(); break;
+            }
+            }
 
     private void UpdatePatrol()
     {
@@ -247,9 +248,9 @@ public class Enemy : Entity
 
     private void UpdateReturn()
     {
-        float dist = Vector2.Distance(transform.position, _spawnPos);
+        float distToSpawn = Vector2.Distance(transform.position, _spawnPos);
 
-        if (dist <= 5f)
+        if (distToSpawn <= 5f)
         {
             // 스폰 지점 복귀 완료
             _isForcedChase = false;
@@ -259,33 +260,44 @@ public class Enemy : Entity
 
         MoveToward(_spawnPos);
 
-        // 복귀 중 플레이어 감지
-        if (_target != null)
+        // [수정] 복귀 중 히스테리시스 적용: 스폰 지점 근처로 충분히 돌아왔을 때만 플레이어 다시 감지
+        if (distToSpawn < _returnRange * 0.5f)
         {
-            float distToPlayer = Vector2.Distance(transform.position, _target.transform.position);
-            if (distToPlayer <= _detectRange * 0.5f)
-                TransitionTo(AiState.CHASE);
+            if (_target != null)
+            {
+                float distToPlayer = Vector2.Distance(transform.position, _target.transform.position);
+                if (distToPlayer <= _detectRange)
+                    TransitionTo(AiState.CHASE);
+            }
         }
     }
 
     private void UpdateFlee()
     {
-        if (_target == null)
+        // [수정] 무한 도망 대신 스폰 지점(Group)으로 복귀
+        float distToSpawn = Vector2.Distance(transform.position, _spawnPos);
+
+        if (distToSpawn <= 0.5f)
         {
-            TransitionTo(AiState.RETURN);
+            TransitionTo(AiState.RESTORE);
             return;
         }
 
-        // HP 회복되면 CHASE 복귀
-        if (HpPercent > _fleeHpPercent + 0.05f)
+        MoveToward(_spawnPos);
+    }
+
+    private void UpdateRestore()
+    {
+        // HP가 일정 수준 이상 회복되면 PATROL로 복귀
+        if (HpPercent >= 0.8f) // 80% 이상 회복 시 복귀
         {
-            TransitionTo(AiState.CHASE);
+            TransitionTo(AiState.PATROL);
             return;
         }
 
-        // 플레이어 반대 방향으로 도주
-        Vector3 fleeDir = (transform.position - _target.transform.position).normalized;
-        transform.Translate(fleeDir * Stat.FinalMoveSpd * Time.deltaTime);
+        // 제자리에 서서 회복 (초당 5%씩 회복 예시)
+        float healAmount = Stat.FinalMaxHealth * 0.05f * Time.deltaTime;
+        Stat.ChangeHealth(healAmount);
     }
 
     private void TransitionTo(AiState next)

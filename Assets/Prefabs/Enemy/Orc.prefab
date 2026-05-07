@@ -47,9 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfe075a2d7cfebf4f93b9eb893d5cfe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _detectRange: 5
+  _detectRange: 12
   _attackRange: 1.5
-  _returnRange: 10
+  _returnRange: 35
   _fleeHpPercent: 0.15
   _statData: {fileID: 11400000, guid: 91a014c4891c127418f604608a6e2e06, type: 2}
 --- !u!50 &8124717310600324625
