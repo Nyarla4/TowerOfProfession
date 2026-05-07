@@ -63,7 +63,10 @@ public class GameManager : MonoBehaviour
 
         // 플레이어 사망 이벤트 구독
         _player.OnDead += OnPlayerDead;
-    }
+
+        // UI 초기화 (스탯 초기화 완료 후)
+        UIManager.Instance?.RefreshAll();
+        }
 
     // ─────────────────────────────────────────────
     // 신규 게임

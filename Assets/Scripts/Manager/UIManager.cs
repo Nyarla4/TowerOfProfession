@@ -80,8 +80,6 @@ public class UIManager : MonoBehaviour
             : FindFirstObjectByType<PlayerEntity>();
 
         _playerManager = PlayerManager.Instance;
-
-        RefreshAll();
     }
 
     // ─────────────────────────────────────────────
@@ -224,6 +222,12 @@ public class UIManager : MonoBehaviour
     /// <summary> 전체 UI 즉시 갱신 (씬 로드·리스폰 후 호출) </summary>
     public void RefreshAll()
     {
+        // 참조가 아직 없다면 갱신 시도
+        if (_player == null)
+            _player = GameManager.Instance?.GetPlayer() ?? FindFirstObjectByType<PlayerEntity>();
+        if (_playerManager == null)
+            _playerManager = PlayerManager.Instance;
+
         if (_player == null) return;
         UpdateHp();
         UpdateExp();
