@@ -96,11 +96,11 @@ public class GameManager : MonoBehaviour
 
         var data = new PlayData
         {
-            level              = PlayerManager.Instance != null ? PlayerManager.Instance.Level : 1,
-            exp                = PlayerManager.Instance != null ? PlayerManager.Instance.Exp   : 0f,
+            level              = LevelUpManager.Instance != null ? LevelUpManager.Instance.CurrentLevel : 1,
+            exp                = LevelUpManager.Instance != null ? LevelUpManager.Instance.CurrentExp : 0f,
             jobId              = _player.CurrentJob != null ? _player.CurrentJob.JobID : JobID.APPRENTICE,
             hp                 = _player.Stat.CurrentHealth,
-            statPoints         = PlayerManager.Instance != null ? PlayerManager.Instance.StatPoints : 0,
+            statPoints         = LevelUpManager.Instance != null ? LevelUpManager.Instance.StatPoints : 0,
             lastSpawnPointName = _defaultSpawnPoint != null ? _defaultSpawnPoint.name : "",
             worldX             = _player.transform.position.x,
             worldY             = _player.transform.position.y,

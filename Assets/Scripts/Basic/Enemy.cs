@@ -33,6 +33,9 @@ public class Enemy : Entity
     /// <summary> 원거리 공격 투사체 프리팹 (Initialize에서 _statData.ProjectilePrefab으로 세팅) </summary>
     private GameObject _projectilePrefab;
 
+    /// <summary> 구조적으로 결정된 공격 로직 (근접 vs 원거리) </summary>
+    private System.Action<PlayerEntity> _performAttack;
+
     // ─────────────────────────────────────────────
     // 공격 타이머
     // ─────────────────────────────────────────────
@@ -79,6 +82,13 @@ public class Enemy : Entity
         CurrentState = AiState.PATROL;
         _isForcedChase = false;
         _projectilePrefab = data.ProjectilePrefab; // 원거리 적 투사체 세팅
+
+        // 구조적 공격 로직 결정
+        if (data.AttackType == AttackType.RANGED_SINGLE || data.AttackType == AttackType.RANGED_AREA)
+            _performAttack = FireProjectile;
+        else
+            _performAttack = (target) => Attack(target);
+
         ClearStatusEffects();
     }
 
@@ -193,17 +203,12 @@ public class Enemy : Entity
             return;
         }
 
-        // 공격 실행 — AttackType에 따라 근접/원거리 분기
+        // 공격 실행
         float atkInterval = 1f / Mathf.Max(0.01f, Stat.FinalAtkSpd);
         if (Time.time - _lastAttackTime >= atkInterval)
         {
             _lastAttackTime = Time.time;
-
-            if (_statData.AttackType == AttackType.RANGED_SINGLE ||
-                _statData.AttackType == AttackType.RANGED_AREA)
-                FireProjectile(_target);
-            else
-                Attack(_target);
+            _performAttack?.Invoke(_target);
         }
     }
 

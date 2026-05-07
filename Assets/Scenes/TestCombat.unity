@@ -3432,6 +3432,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1257590701
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1257590702}
+  m_Layer: 0
+  m_Name: DefaultSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1257590702
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1257590701}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1298831570
 GameObject:
   m_ObjectHideFlags: 0
@@ -3997,9 +4028,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _respawnDelay: 3
-  _maxLevel: 100
-  _baseExpRequired: 100
-  _expGrowthRate: 1.15
   _hpPerPoint: 30
   _atkPerPoint: 3
   _defPerPoint: 2
@@ -4750,7 +4778,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player: {fileID: 1208393182}
   _playerStatData: {fileID: 11400000, guid: 9dcc5772a42b8d441874ab0abf2c80f8, type: 2}
-  _defaultSpawnPoint: {fileID: 0}
+  _defaultSpawnPoint: {fileID: 1257590702}
   _allJobs:
   - {fileID: 11400000, guid: a6701f73a94d8834aac34f7a1605d625, type: 2}
   - {fileID: 11400000, guid: c536a6514e2dccf46a4c0cccf5469c87, type: 2}
@@ -4917,3 +4945,4 @@ SceneRoots:
   - {fileID: 1629616555}
   - {fileID: 1245757962}
   - {fileID: 1779099170}
+  - {fileID: 1257590702}

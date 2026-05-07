@@ -14,6 +14,7 @@ public class LevelUpManager : MonoBehaviour
     public int CurrentLevel = 1;
     public float CurrentExp = 0f;
     public float MaxExp = 100f; // 다음 레벨업 요구량
+    public int StatPoints { get; private set; } = 0;
 
     [Header("Data Pool")]
     public List<UpgradeDataSO> AllUpgrades; // 인스펙터에서 전체 카드 할당
@@ -47,12 +48,26 @@ public class LevelUpManager : MonoBehaviour
         {
             CurrentExp -= MaxExp;
             CurrentLevel++;
+            StatPoints += 3; // 레벨업마다 스탯포인트 3 지급
             MaxExp = MaxExp * 1.5f; // 임시: 요구 경험치 1.5배씩 증가
 
             TriggerLevelUp();
         }
 
         OnExpChanged?.Invoke(CurrentExp, MaxExp);
+    }
+
+    public void ConsumeStatPoint()
+    {
+        StatPoints = Mathf.Max(0, StatPoints - 1);
+    }
+
+    public void LoadFromData(int level, float exp, float maxExp, int statPoints)
+    {
+        CurrentLevel = level;
+        CurrentExp = exp;
+        MaxExp = maxExp;
+        StatPoints = statPoints;
     }
 
     private void TriggerLevelUp()

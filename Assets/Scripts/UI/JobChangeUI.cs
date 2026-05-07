@@ -121,7 +121,7 @@ public class JobChangeUI : MonoBehaviour
 
     private void Update()
     {
-        if (_jobChangeButton == null || _playerManager == null) return;
+        if (_jobChangeButton == null || LevelUpManager.Instance == null) return;
         _jobChangeButton.SetActive(CanChangeJob());
     }
 
@@ -131,9 +131,9 @@ public class JobChangeUI : MonoBehaviour
 
     private bool CanChangeJob()
     {
-        if (_player?.CurrentJob == null) return false;
+        if (_player?.CurrentJob == null || LevelUpManager.Instance == null) return false;
         JobID jobId = _player.CurrentJob.JobID;
-        int level    = _playerManager.Level;
+        int level    = LevelUpManager.Instance.CurrentLevel;
 
         if (jobId == JobID.APPRENTICE)
             return level >= _firstJobLevel && _jobTree.ContainsKey(jobId);

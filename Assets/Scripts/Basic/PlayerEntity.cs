@@ -102,11 +102,15 @@ public class PlayerEntity : Entity
     public override void Initialize(EntityStatDataSO data)
     {
         base.Initialize(data);
+        CurrentJob = null; // Stat이 초기화되었으므로 기존 직업 보너스도 날아감
         ResetFlags();
     }
 
     public void ChangeJob(JobDataSO newJob)
     {
+        if (newJob == null) return;
+        if (CurrentJob == newJob) return; // 중복 전직 방지
+
         // 이전 직업 보너스/패시브 제거 (재전직 스탯 누적 방지)
         if (CurrentJob != null)
         {

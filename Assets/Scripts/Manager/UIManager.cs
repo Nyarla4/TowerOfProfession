@@ -116,12 +116,15 @@ public class UIManager : MonoBehaviour
 
     private void UpdateExp()
     {
-        if (_playerManager == null) return;
+        if (LevelUpManager.Instance == null) return;
 
-        if (_expSlider  != null) _expSlider.value = _playerManager.ExpRatio;
-        if (_levelText  != null) _levelText.text  = $"Lv. {_playerManager.Level}";
+        var lum = LevelUpManager.Instance;
+        float ratio = lum.MaxExp > 0 ? lum.CurrentExp / lum.MaxExp : 0f;
+
+        if (_expSlider  != null) _expSlider.value = ratio;
+        if (_levelText  != null) _levelText.text  = $"Lv. {lum.CurrentLevel}";
         if (_expText    != null) _expText.text =
-            $"{Mathf.FloorToInt(_playerManager.Exp)} / {Mathf.FloorToInt(_playerManager.ExpToNext)}";
+            $"{Mathf.FloorToInt(lum.CurrentExp)} / {Mathf.FloorToInt(lum.MaxExp)}";
     }
 
     // ─────────────────────────────────────────────
@@ -130,9 +133,9 @@ public class UIManager : MonoBehaviour
 
     private void UpdateStatPoints()
     {
-        if (_playerManager == null) return;
+        if (LevelUpManager.Instance == null) return;
 
-        int sp = _playerManager.StatPoints;
+        int sp = LevelUpManager.Instance.StatPoints;
         if (_statPointText  != null) _statPointText.text = $"스탯포인트: {sp}";
         if (_statPointAlert != null) _statPointAlert.SetActive(sp > 0);
     }
