@@ -41,10 +41,12 @@ public class UIManager : MonoBehaviour
     // ─────────────────────────────────────────────
 
     [Header("Skill Slots")]
+    [SerializeField] private Button   _skill0Button;
     [SerializeField] private Image    _skill0Icon;
     [SerializeField] private Image    _skill0Cooldown; // 쿨다운 오버레이 (fillAmount)
     [SerializeField] private TMP_Text _skill0CooldownText;
 
+    [SerializeField] private Button   _skill1Button;
     [SerializeField] private Image    _skill1Icon;
     [SerializeField] private Image    _skill1Cooldown;
     [SerializeField] private TMP_Text _skill1CooldownText;
@@ -80,6 +82,16 @@ public class UIManager : MonoBehaviour
             : FindFirstObjectByType<PlayerEntity>();
 
         _playerManager = PlayerManager.Instance;
+
+        // 버튼 리스너 등록
+        if (_skill0Button != null) _skill0Button.onClick.AddListener(() => OnSkillClicked(0));
+        if (_skill1Button != null) _skill1Button.onClick.AddListener(() => OnSkillClicked(1));
+    }
+
+    private void OnSkillClicked(int slotIndex)
+    {
+        if (_player == null) return;
+        SkillManager.Instance?.ExecuteSkill(slotIndex, _player);
     }
 
     // ─────────────────────────────────────────────
@@ -150,16 +162,17 @@ public class UIManager : MonoBehaviour
         var actives = _player.CurrentJob.Actives;
         if (actives == null) return;
 
-        UpdateSlot(0, actives, _skill0Icon, _skill0Cooldown, _skill0CooldownText);
-        UpdateSlot(1, actives, _skill1Icon, _skill1Cooldown, _skill1CooldownText);
+        UpdateSlot(0, actives, _skill0Button, _skill0Icon, _skill0Cooldown, _skill0CooldownText);
+        UpdateSlot(1, actives, _skill1Button, _skill1Icon, _skill1Cooldown, _skill1CooldownText);
     }
 
     private void UpdateSlot(int index, ActiveData[] actives,
-        Image icon, Image cooldownOverlay, TMP_Text cooldownText)
+        Button button, Image icon, Image cooldownOverlay, TMP_Text cooldownText)
     {
         if (index >= actives.Length)
         {
             // 슬롯에 스킬 없음 → 비활성화
+            if (button          != null) button.interactable = false;
             if (icon            != null) icon.enabled = false;
             if (cooldownOverlay != null) cooldownOverlay.fillAmount = 0f;
             if (cooldownText    != null) cooldownText.text = "";
@@ -167,6 +180,9 @@ public class UIManager : MonoBehaviour
         }
 
         var data = actives[index];
+
+        // 버튼 활성화
+        if (button != null) button.interactable = true;
 
         // 아이콘
         if (icon != null)
