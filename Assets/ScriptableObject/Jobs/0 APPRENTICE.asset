@@ -39,7 +39,7 @@ MonoBehaviour:
   Actives:
   - SkillID: app_a1
     DisplayName: "\uC704\uD611\uC758 \uC678\uCE68"
-    Icon: {fileID: 0}
+    Icon: {fileID: 6621720449342619125, guid: 8bae501af37f62341803d7816ff23f66, type: 3}
     Cooldown: 8
     Duration: 0
     Radius: 120
@@ -50,7 +50,7 @@ MonoBehaviour:
     EffectPrefab: {fileID: 0}
   - SkillID: app_a2
     DisplayName: "\uAE34\uAE09 \uD68C\uD53C"
-    Icon: {fileID: 0}
+    Icon: {fileID: 1428711041462404206, guid: 6842b84940332e34296d2d11386351e0, type: 3}
     Cooldown: 5
     Duration: 0
     Radius: 0
