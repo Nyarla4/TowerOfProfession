@@ -17,9 +17,9 @@ public class Enemy : Entity
     public AiState CurrentState { get; private set; } = AiState.PATROL;
 
     [Header("AI Settings")]
-    [SerializeField] private float _detectRange = 300f; // 감지 반경
-    [SerializeField] private float _attackRange = 60f;  // 공격 반경
-    [SerializeField] private float _returnRange = 600f; // 이탈 → RETURN 전환 거리
+    [SerializeField] private float _detectRange = 12f; // 감지 반경
+    [SerializeField] private float _attackRange = 1.5f;  // 공격 반경
+    [SerializeField] private float _returnRange = 35f; // 이탈 → RETURN 전환 거리
     [SerializeField] private float _fleeHpPercent = 0.15f; // FLEE 전환 HP 비율
 
     private Vector3 _spawnPos;       // 순찰 기준점
@@ -190,8 +190,8 @@ public class Enemy : Entity
 
         float dist = Vector2.Distance(transform.position, _target.transform.position);
 
-        // 공격 범위 벗어남
-        if (dist > _attackRange * 1.2f)
+        // [수정] 공격 범위 벗어남 (30% 버퍼 적용하여 상태 핑퐁 방지)
+        if (dist > _attackRange * 1.3f)
         {
             TransitionTo(AiState.CHASE);
             return;
@@ -250,7 +250,7 @@ public class Enemy : Entity
     {
         float distToSpawn = Vector2.Distance(transform.position, _spawnPos);
 
-        if (distToSpawn <= 5f)
+        if (distToSpawn <= 0.5f)
         {
             // 스폰 지점 복귀 완료
             _isForcedChase = false;
