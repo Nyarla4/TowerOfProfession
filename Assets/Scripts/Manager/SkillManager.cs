@@ -105,61 +105,13 @@ public class SkillManager : MonoBehaviour
 
     private bool PerformActiveSkill(PlayerEntity player, ActiveData skill)
     {
-        // SkillID에 따른 실제 로직 분기
-        switch (skill.SkillID)
+        if (skill.SkillLogic != null)
         {
-            case "app_a1": // 견습: 위협의 외침 (플레이어 주변 광역 데미지)
-                           // 과거 기획대로 플레이어 주변으로 데미지를 줍니다.
-                DealAreaDamage(player.transform.position, skill.Radius, player.Stat.FinalAtk * skill.Multiplier);
-
-                // 지정된 이펙트가 있다면 생성
-                if (skill.EffectPrefab != null)
-                {
-                    PoolManager.SpawnOrInstance(skill.EffectPrefab, player.transform.position, Quaternion.identity);
-                }
-
-                // (💡참고: 과거 기획에는 '넉백' 효과도 있었으므로, 추후 Enemy에 넉백(Push) 로직을 구현하시면 여기에 한 줄 추가하시면 됩니다!)
-                return true;
-            case "pal_a1": // 예: 팔라딘 성역 (광역 데미지 + 슬로우?)
-                DealAreaDamage(player.transform.position, skill.Radius, player.Stat.FinalAtk * skill.Multiplier);
-                if (skill.EffectPrefab != null)
-                    PoolManager.SpawnOrInstance(skill.EffectPrefab, player.transform.position, Quaternion.identity);
-                return true;
-
-            case "pal_a2": // 팔라딘 도발 (주변 적 강제 추적)
-                var nearbyEnemies = EnemyManager.Instance.GetAllEnemies();
-                foreach (var e in nearbyEnemies)
-                {
-                    if (e.IsAlive && Vector2.Distance(player.transform.position, e.transform.position) <= skill.Radius)
-                    {
-                        e.ForceChase(player);
-                    }
-                }
-                return true;
-
-            case "war_a1": // 전사 대시 공격
-                player.Dash(skill.DashDistance);
-                // 대시 직후 데미지는 별도 로직이 필요할 수 있으나 여기선 단순 대시로 처리
-                return true;
-
-            default:
-                Debug.LogWarning($"[SkillManager] 정의되지 않은 Active SkillID: {skill.SkillID}");
-                return false;
+            return skill.SkillLogic.Execute(player, skill);
         }
-    }
 
-    // [광역 데미지 유틸 - Projectile 없이 호출 가능하도록 오버로딩]
-    private void DealAreaDamage(Vector3 center, float radius, float damage)
-    {
-        var enemies = EnemyManager.Instance.GetAllEnemies();
-        foreach (var e in enemies)
-        {
-            if (!e.IsAlive) continue;
-            if (Vector2.Distance(center, e.transform.position) <= radius)
-            {
-                e.TakeDamage(FindFirstObjectByType<PlayerEntity>(), damage);
-            }
-        }
+        Debug.LogWarning($"[SkillManager] SkillLogic is missing for Active Skill: {skill.SkillID}");
+        return false;
     }
 
     // [광역 데미지 유틸]

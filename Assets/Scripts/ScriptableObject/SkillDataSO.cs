@@ -27,4 +27,5 @@ public class ActiveData
     public float ThresholdPercent;
     public float SelfHpCostPercent;
     public GameObject EffectPrefab;
-}
+    public SkillLogicSO SkillLogic;
+    }

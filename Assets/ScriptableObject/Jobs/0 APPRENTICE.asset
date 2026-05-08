@@ -48,6 +48,7 @@ MonoBehaviour:
     ThresholdPercent: 0
     SelfHpCostPercent: 0
     EffectPrefab: {fileID: 0}
+    SkillLogic: {fileID: 11400000, guid: 9bab84ee9a22fee46bf008afbf9f2a7e, type: 2}
   - SkillID: app_a2
     DisplayName: "\uAE34\uAE09 \uD68C\uD53C"
     Icon: {fileID: 1428711041462404206, guid: 6842b84940332e34296d2d11386351e0, type: 3}
@@ -59,3 +60,4 @@ MonoBehaviour:
     ThresholdPercent: 0
     SelfHpCostPercent: 0
     EffectPrefab: {fileID: 0}
+    SkillLogic: {fileID: 0}
