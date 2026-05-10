@@ -102,8 +102,21 @@ public class PlayerEntity : Entity
     public override void Initialize(EntityStatDataSO data)
     {
         base.Initialize(data);
+        LoadAllocatedStats(); // Load saved STR/DEX/INT additions
         CurrentJob = null; // Stat이 초기화되었으므로 기존 직업 보너스도 날아감
         ResetFlags();
+    }
+
+    public void LoadAllocatedStats()
+    {
+        PlayData data = SaveSystem.LoadPlayData();
+        if (data == null) return;
+
+        if (data.AllocatedStr > 0) Stat.AddPermanent(StatType.STR, data.AllocatedStr, false);
+        if (data.AllocatedDex > 0) Stat.AddPermanent(StatType.DEX, data.AllocatedDex, false);
+        if (data.AllocatedInt > 0) Stat.AddPermanent(StatType.INT, data.AllocatedInt, false);
+
+        Debug.Log($"PlayerEntity_LoadAllocatedStats: STR {data.AllocatedStr}, DEX {data.AllocatedDex}, INT {data.AllocatedInt} loaded.");
     }
 
     public void ChangeJob(JobDataSO newJob)

@@ -94,6 +94,9 @@ public class GameManager : MonoBehaviour
     {
         if (_player == null) return;
 
+        // 기존 저장된 스탯 정보 유지 (오버라이트 방지)
+        PlayData existingData = SaveSystem.LoadPlayData();
+
         var data = new PlayData
         {
             level              = LevelUpManager.Instance != null ? LevelUpManager.Instance.CurrentLevel : 1,
@@ -104,6 +107,11 @@ public class GameManager : MonoBehaviour
             lastSpawnPointName = _defaultSpawnPoint != null ? _defaultSpawnPoint.name : "",
             worldX             = _player.transform.position.x,
             worldY             = _player.transform.position.y,
+            
+            // 영구 스탯 정보 계승
+            AllocatedStr       = existingData.AllocatedStr,
+            AllocatedDex       = existingData.AllocatedDex,
+            AllocatedInt       = existingData.AllocatedInt
         };
 
         SaveSystem.SavePlayData(data);

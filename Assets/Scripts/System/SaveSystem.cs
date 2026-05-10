@@ -98,4 +98,9 @@ public class PlayData
     public string lastSpawnPointName = "";
     public float worldX = 0f;
     public float worldY = 0f;
-}
+
+    // 투자된 스탯 포인트
+    public int AllocatedStr = 0;
+    public int AllocatedDex = 0;
+    public int AllocatedInt = 0;
+    }

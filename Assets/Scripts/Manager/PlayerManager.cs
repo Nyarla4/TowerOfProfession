@@ -123,6 +123,17 @@ public class PlayerManager : MonoBehaviour
             LevelUpManager.Instance.ConsumeStatPoint();
         }
 
+        // 1. Load current save
+        PlayData data = SaveSystem.LoadPlayData();
+        // 2. Add current additions
+        data.AllocatedStr += addStr;
+        data.AllocatedDex += addDex;
+        data.AllocatedInt += addInt;
+        // 3. Update point count in save to match current session
+        data.statPoints = LevelUpManager.Instance.StatPoints;
+        // 4. Save back
+        SaveSystem.SavePlayData(data);
+
         Debug.Log($"PlayerManager_AllocateStatsBulk: STR+{addStr}, DEX+{addDex}, INT+{addInt}. 남은포인트={LevelUpManager.Instance.StatPoints}");
         }
 
