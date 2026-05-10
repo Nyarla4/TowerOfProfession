@@ -43,11 +43,12 @@ MonoBehaviour:
     Cooldown: 15
     Duration: 5
     Radius: 0
-    DashDistance: 0
+    DashDistance: 5
     Multiplier: 0
     ThresholdPercent: 0
     SelfHpCostPercent: 0
     EffectPrefab: {fileID: 0}
+    SkillLogic: {fileID: 11400000, guid: dba4dba85422e284f9097505b952d0c3, type: 2}
   - SkillID: war_a2
     DisplayName: "\uBC29\uC5B4\uD0DC\uC138"
     Icon: {fileID: 0}
@@ -59,3 +60,4 @@ MonoBehaviour:
     ThresholdPercent: 0
     SelfHpCostPercent: 0
     EffectPrefab: {fileID: 0}
+    SkillLogic: {fileID: 0}

@@ -48,6 +48,7 @@ MonoBehaviour:
     ThresholdPercent: 0
     SelfHpCostPercent: 0
     EffectPrefab: {fileID: 0}
+    SkillLogic: {fileID: 11400000, guid: 9bab84ee9a22fee46bf008afbf9f2a7e, type: 2}
   - SkillID: wiz_a2
     DisplayName: "\uBCF4\uD638\uB9C9"
     Icon: {fileID: 0}
@@ -59,3 +60,4 @@ MonoBehaviour:
     ThresholdPercent: 0
     SelfHpCostPercent: 0
     EffectPrefab: {fileID: 0}
+    SkillLogic: {fileID: 0}

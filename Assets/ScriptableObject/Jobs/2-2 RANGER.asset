@@ -48,6 +48,7 @@ MonoBehaviour:
     ThresholdPercent: 0
     SelfHpCostPercent: 0
     EffectPrefab: {fileID: 0}
+    SkillLogic: {fileID: 0}
   - SkillID: ran_a2
     DisplayName: "\uC804\uB825\uC9C8\uC8FC"
     Icon: {fileID: 0}
@@ -59,3 +60,4 @@ MonoBehaviour:
     ThresholdPercent: 0
     SelfHpCostPercent: 0
     EffectPrefab: {fileID: 0}
+    SkillLogic: {fileID: 11400000, guid: dba4dba85422e284f9097505b952d0c3, type: 2}
