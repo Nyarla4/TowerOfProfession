@@ -96,11 +96,39 @@ public class PlayerManager : MonoBehaviour
 
         Debug.Log($"PlayerManager_AllocateStat: {type} +{bonus}, 남은포인트={LevelUpManager.Instance.StatPoints}");
         return true;
-    }
+        }
 
-    // ─────────────────────────────────────────────
-    // 리스폰
-    // ─────────────────────────────────────────────
+        /// <summary>
+        /// 여러 스탯을 한 번에 배분 (StatAllocUI의 Commit 로직 대응)
+        /// </summary>
+        public void AllocateStatsBulk(int addStr, int addDex, int addInt)
+        {
+        if (_player == null) return;
+
+        int totalPoints = addStr + addDex + addInt;
+        if (totalPoints <= 0) return;
+
+        if (LevelUpManager.Instance == null || LevelUpManager.Instance.StatPoints < totalPoints)
+        {
+            Debug.LogWarning("PlayerManager_AllocateStatsBulk: 스탯포인트 부족");
+            return;
+        }
+
+        if (addStr > 0) _player.Stat.AddPermanent(StatType.STR, addStr, false);
+        if (addDex > 0) _player.Stat.AddPermanent(StatType.DEX, addDex, false);
+        if (addInt > 0) _player.Stat.AddPermanent(StatType.INT, addInt, false);
+
+        for (int i = 0; i < totalPoints; i++)
+        {
+            LevelUpManager.Instance.ConsumeStatPoint();
+        }
+
+        Debug.Log($"PlayerManager_AllocateStatsBulk: STR+{addStr}, DEX+{addDex}, INT+{addInt}. 남은포인트={LevelUpManager.Instance.StatPoints}");
+        }
+
+        // ─────────────────────────────────────────────
+        // 리스폰
+// ─────────────────────────────────────────────
 
     /// <summary>
     /// GameManager.OnPlayerDead에서 호출 — 딜레이 후 리스폰
