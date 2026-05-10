@@ -13,6 +13,9 @@ namespace status
         CriticalChance,
         Regen,          // 자연회복량 (wiz_p1, prs_p1)
         AttackRange,    // 공격 사거리 (sni_p1, arc_a2)
+        STR,
+        DEX,
+        INT
     }
 
     [CreateAssetMenu(fileName = "NewEntityStat", menuName = "ScriptableObjects/StatData")]
@@ -108,9 +111,12 @@ namespace status
         public float FinalCritChance => Mathf.Clamp01(_statMap[StatType.CriticalChance].Total);
         public float FinalRegen => Mathf.Max(0, _statMap[StatType.Regen].Total);
         public float FinalAtkRange => Mathf.Max(0, _statMap[StatType.AttackRange].Total);
+        public float FinalStr => _statMap[StatType.STR].Total;
+        public float FinalDex => _statMap[StatType.DEX].Total;
+        public float FinalInt => _statMap[StatType.INT].Total;
 
         // ─────────────────────────────────────────────
-        // 전투 플래그 (HTML 치명타/은신/관통 시스템 대응)
+// 전투 플래그 (HTML 치명타/은신/관통 시스템 대응)
         // ─────────────────────────────────────────────
 
         /// <summary> 무적 카운터 — 중첩 가능 (은신+스킬 무적 동시 적용 대응) </summary>
@@ -165,8 +171,11 @@ namespace status
                 { StatType.AttackRange,    new StatValue(_baseData.AttackRange) },
                 { StatType.CriticalChance, new StatValue(_baseData.CriticalChance) },
                 { StatType.Regen,          new StatValue(_baseData.Regen) },
-            };
-        }
+                { StatType.STR,            new StatValue(0) },
+                { StatType.DEX,            new StatValue(0) },
+                { StatType.INT,            new StatValue(0) },
+                };
+                }
 
         public void Init()
         {

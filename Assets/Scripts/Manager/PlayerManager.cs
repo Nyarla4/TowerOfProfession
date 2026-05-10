@@ -78,6 +78,9 @@ public class PlayerManager : MonoBehaviour
             StatType.Attack     => _atkPerPoint,
             StatType.Defense    => _defPerPoint,
             StatType.MoveSpeed  => _spdPerPoint,
+            StatType.STR        => 1f,
+            StatType.DEX        => 1f,
+            StatType.INT        => 1f,
             _ => 0f
         };
 
